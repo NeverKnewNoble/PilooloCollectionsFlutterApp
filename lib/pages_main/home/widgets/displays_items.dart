@@ -20,6 +20,9 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white, // Set background color to white
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero, // Remove border radius
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,12 +48,36 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  price,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      price,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 255, 181, 181),
+                        // color: Color(0xFFFF0000),
+                      ),
+                    ),
+                    // Cart button
+                    ElevatedButton(
+                      onPressed: () {
+                        // Handle add to cart action
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30), // Set border radius
+                        ), backgroundColor: Colors.white,
+                        // padding: const EdgeInsets.all(2.0), // Background color
+                      ),
+                      child: const Icon(
+                        Icons.add_shopping_cart,
+                        color: Colors.black, // Icon color
+                        size: 20,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

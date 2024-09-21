@@ -14,7 +14,6 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -114,42 +113,42 @@ class HomePageState extends State<HomePage> {
                       return const ProductCard(
                         imagePath: 'images/salesimages/skirtfront.jpeg',
                         title: 'SHEIN Clasi Floral Print Puff Sleeve Belted Dress',
-                        price: '\$20',
+                        price: '\$20.00',
                         imageHeight: 250, // Updated image height
                       );
                     case 1:
                       return const ProductCard(
                         imagePath: 'images/salesimages/flowfront.jpeg',
                         title: 'EMERY ROSE Womens Casual Floral Long Sleeve',
-                        price: '\$24',
+                        price: '\$24.00',
                         imageHeight: 250,
                       );
                     case 2:
                       return const ProductCard(
                         imagePath: 'images/salesimages/sweatfront.jpeg',
                         title: 'SHEIN Essnce Long Sleeve Sweater',
-                        price: '\$32',
+                        price: '\$32.00',
                         imageHeight: 250,
                       );
                     case 3:
                       return const ProductCard(
                         imagePath: 'images/salesimages/jacketfront.jpeg',
                         title: 'SHEIN WOMANS Stylish Jacket',
-                        price: '\$22',
+                        price: '\$22.00',
                         imageHeight: 250,
                       );
                     case 4:
                       return const ProductCard(
                         imagePath: 'images/salesimages/menblue.jpeg',
                         title: 'Mens Blue Collar Shirt',
-                        price: '\$22',
+                        price: '\$22.99',
                         imageHeight: 250,
                       );
                     case 5:
                       return const ProductCard(
                         imagePath: 'images/salesimages/mengreen.jpeg',
                         title: 'Mens Green Collar Shirt',
-                        price: '\$22',
+                        price: '\$22.99',
                         imageHeight: 250,
                       );
                     default:
