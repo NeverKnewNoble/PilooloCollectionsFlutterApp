@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class ImageSlider extends StatelessWidget {
   final Function(int) onChange;
   final int currentSlide;
+  final int totalSlides; // Add this to get the total number of slides
   const ImageSlider({
     super.key,
     required this.currentSlide,
     required this.onChange,
+    required this.totalSlides, // Accept the total number of slides
   });
 
   @override
@@ -47,20 +49,21 @@ class ImageSlider extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                5,
+                totalSlides, // Make this dynamic based on the total slides
                 (index) => AnimatedContainer(
-                  duration: const Duration(microseconds: 300),
+                  duration: const Duration(milliseconds: 300), // Fixed to milliseconds
                   width: currentSlide == index ? 15 : 8,
                   height: 8,
                   margin: const EdgeInsets.only(right: 3),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: currentSlide == index
-                          ? const Color(0xFFFF0000)
-                          : Colors.transparent,
-                      border: Border.all(
-                        color: const Color(0xFFFF0000),
-                      )),
+                    borderRadius: BorderRadius.circular(10),
+                    color: currentSlide == index
+                        ? const Color(0xFFFF0000)
+                        : Colors.transparent,
+                    border: Border.all(
+                      color: const Color(0xFFFF0000),
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -56,8 +56,8 @@ class ProductCard extends StatelessWidget {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Color.fromARGB(255, 255, 181, 181),
-                        // color: Color(0xFFFF0000),
+                        // color: Color.fromARGB(255, 255, 181, 181),
+                        color: Color(0xFFFF0000),
                       ),
                     ),
                     // Cart button
@@ -67,9 +67,11 @@ class ProductCard extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30), // Set border radius
-                        ), backgroundColor: Colors.white,
-                        // padding: const EdgeInsets.all(2.0), // Background color
+                          borderRadius: BorderRadius.circular(10), // Set border radius
+                        ),
+                        backgroundColor: Colors.white,
+                        padding: EdgeInsets.zero, // Remove padding
+                        minimumSize: const Size(40, 30), // Set minimum size for the button
                       ),
                       child: const Icon(
                         Icons.add_shopping_cart,
