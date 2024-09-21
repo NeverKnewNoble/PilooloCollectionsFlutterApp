@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:piloolo/pages_main/home.dart';
+import 'package:piloolo/pages/splash.dart';
 
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Piloolo',
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: SplashPage(),
     );
   }
 }

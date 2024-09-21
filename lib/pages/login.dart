@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:piloolo/pages/forgot_pass.dart';
 import 'package:piloolo/pages/intro.dart';
 import 'package:piloolo/pages/sign_up.dart';
+import 'package:piloolo/pages_main/home/home.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -125,8 +126,8 @@ class SignInPageState extends State<SignInPage> {
                     if (kDebugMode) {
                       print('Password: ${_passwordController.text}');
                     }
-                    // Navigate to another page after sign-in (e.g., HomePage)
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                    //Navigate to another page after sign-in (e.g., HomePage)
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
                   }
                 },
                 style: ElevatedButton.styleFrom(

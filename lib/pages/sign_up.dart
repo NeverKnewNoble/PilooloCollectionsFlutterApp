@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piloolo/pages_main/home/home.dart';
 
 class CreateAccountPage extends StatefulWidget {
   const CreateAccountPage({super.key});
@@ -95,6 +96,8 @@ class CreateAccountPageState extends State<CreateAccountPage> {
                           if (_formKey.currentState!.validate()) {
                             // Process account creation
                           }
+                          
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
                         },
                         child: const Text(
                           'Create Account',
