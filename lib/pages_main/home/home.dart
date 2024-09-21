@@ -3,7 +3,8 @@ import 'package:piloolo/pages_main/home/widgets/category_items.dart';
 import 'package:piloolo/pages_main/home/widgets/displays_items.dart';
 import 'package:piloolo/pages_main/home/widgets/image_slider.dart';
 import 'package:piloolo/pages_main/home/widgets/search_bar.dart';
-import 'package:piloolo/components/pagebar.dart'; // Import page bar
+import 'package:piloolo/components/pagebar.dart'; 
+import 'package:piloolo/components/shopping_cart_action.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -15,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int _currentSlide = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
@@ -26,6 +27,11 @@ class HomePageState extends State<HomePage> {
           backgroundColor: Colors.white,
           elevation: 0,
           automaticallyImplyLeading: false, // Removes the back arrow
+
+           actions: const [
+            ShoppingCartAction(), // Use the shopping cart action from the new file
+          ],
+
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -90,6 +96,7 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
 
+
               const SizedBox(height: 16),
 
               // Divider
@@ -104,6 +111,18 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
 
+              const SizedBox(height: 10),
+              
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  'What\s New!',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color:Color.fromARGB(255, 255, 147, 147)),
+                ),
+              ),
+
+
+
               // Grid of Products
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
@@ -116,7 +135,7 @@ class HomePageState extends State<HomePage> {
                     mainAxisSpacing: 16.0,
                     childAspectRatio: 0.6,
                   ),
-                  itemCount: 6, // Update item count as necessary
+                  itemCount: 8, // Update item count as necessary
                   itemBuilder: (context, index) {
                     switch (index) {
                       case 0:
@@ -128,33 +147,47 @@ class HomePageState extends State<HomePage> {
                         );
                       case 1:
                         return const ProductCard(
+                          imagePath: 'images/salesimages/stripedbrown.webp',
+                          title: 'Manfinity Homme Men Striped Print Quarter Zip Polo Shirt',
+                          price: '\$10.99',
+                          imageHeight: 250,
+                        );
+                      case 2:
+                        return const ProductCard(
                           imagePath: 'images/salesimages/flowfront.jpeg',
                           title: 'EMERY ROSE Womens Casual Floral Long Sleeve',
                           price: '\$24.00',
                           imageHeight: 250,
                         );
-                      case 2:
+                      case 3:
+                        return const ProductCard(
+                          imagePath: 'images/salesimages/stripped blue.webp',
+                          title: 'Manfinity Homme Men Striped Print Colorblock Polo Shirt',
+                          price: '\$11.00',
+                          imageHeight: 250,
+                        );
+                      case 4:
                         return const ProductCard(
                           imagePath: 'images/salesimages/sweatfront.jpeg',
                           title: 'SHEIN Essnce Long Sleeve Sweater',
                           price: '\$32.00',
                           imageHeight: 250,
                         );
-                      case 3:
+                      case 5:
                         return const ProductCard(
                           imagePath: 'images/salesimages/jacketfront.jpeg',
                           title: 'SHEIN WOMANS Stylish Jacket',
                           price: '\$22.00',
                           imageHeight: 250,
                         );
-                      case 4:
+                      case 6:
                         return const ProductCard(
                           imagePath: 'images/salesimages/menblue.jpeg',
                           title: 'Mens Blue Collar Shirt',
                           price: '\$22.99',
                           imageHeight: 250,
                         );
-                      case 5:
+                      case 7:
                         return const ProductCard(
                           imagePath: 'images/salesimages/mengreen.jpeg',
                           title: 'Mens Green Collar Shirt',
