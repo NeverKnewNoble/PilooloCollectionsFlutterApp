@@ -43,6 +43,8 @@ class ProductCard extends StatelessWidget {
               children: [
                 Text(
                   title,
+                  maxLines: 1, // Limit to one line
+                  overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -56,8 +58,7 @@ class ProductCard extends StatelessWidget {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        // color: Color.fromARGB(255, 255, 181, 181),
-                        color: Color(0xFFFF0000),
+                        color: Color(0xFFFF0000), // Price color
                       ),
                     ),
                     // Cart button

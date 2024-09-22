@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:piloolo/pages_main/home/widgets/category_items.dart';
-import 'package:piloolo/pages_main/home/widgets/displays_items.dart';
-import 'package:piloolo/pages_main/home/widgets/image_slider.dart';
-import 'package:piloolo/pages_main/home/widgets/search_bar.dart';
+import 'package:piloolo/main/home/widgets/category_items.dart';
+import 'package:piloolo/main/home/widgets/displays_items.dart';
+import 'package:piloolo/main/home/widgets/image_slider.dart';
+import 'package:piloolo/main/home/widgets/search_bar.dart';
 import 'package:piloolo/components/pagebar.dart'; 
 import 'package:piloolo/components/shopping_cart_action.dart';
 

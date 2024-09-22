@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:piloolo/pages_main/home/home.dart';
+import 'package:piloolo/main/home/home.dart';
 
 class CreateAccountPage extends StatefulWidget {
   const CreateAccountPage({super.key});

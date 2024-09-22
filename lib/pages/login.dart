@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:piloolo/pages/forgot_pass.dart';
 import 'package:piloolo/pages/intro.dart';
 import 'package:piloolo/pages/sign_up.dart';
-import 'package:piloolo/pages_main/home/home.dart';
+import 'package:piloolo/main/home/home.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});

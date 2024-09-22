@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:piloolo/pages/splash.dart';
+import 'package:piloolo/main/category/category_gender_page.dart';
+// import 'package:piloolo/pages/splash.dart';
 
 
 void main() {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Piloolo',
       debugShowCheckedModeBanner: false,
-      home: SplashPage(),
+      home: CategoryGenderPage(),
     );
   }
 }
