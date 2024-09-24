@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:piloolo/main/account/account.dart';
+import 'package:piloolo/main/cart/cart.dart';
 import 'package:piloolo/main/category/category_gender_page.dart';
 import 'package:piloolo/main/home/home.dart';
 
 class MainScaffold extends StatefulWidget {
   final Widget body;
   final int selectedIndex;
-  final AppBar? appBar; // Added appBar parameter
+  final AppBar? appBar;
+  final Color? backgroundColor; // Background color
 
   const MainScaffold({
     super.key,
     required this.body,
     required this.selectedIndex,
-    this.appBar, // Accept the appBar as a parameter
+    this.appBar,
+    this.backgroundColor, // Accept the background color
   });
 
   @override
@@ -32,30 +36,52 @@ class MainScaffoldState extends State<MainScaffold> {
       _selectedIndex = index;
     });
 
-    if (index == 0) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-        (route) => false,
-      );
-    } else if (index == 1) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const CategoryGenderPage()),
-        (route) => false,
-      );
-    } else if (index == 2) {
-      // Add navigation to another page (e.g., CartPage)
-    } else if (index == 3) {
-      // Add navigation to account or profile page
+    Widget page;
+    switch (index) {
+      case 0:
+        page = const HomePage();
+        break;
+      case 1:
+        page = const CategoryGenderPage();
+        break;
+      case 2:
+        page = const CartPage(); // Example placeholder
+        break;
+      case 3:
+        page = const ProfilePage(); // Example placeholder
+        break;
+      default:
+        page = const HomePage();
     }
+
+    // Use PageRouteBuilder for smooth transition
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0); // Start from below
+          const end = Offset.zero; // End at current page position
+          const curve = Curves.easeInOut;
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.appBar, // Pass the appBar to Scaffold
-      body: widget.body, // Set the body
+      appBar: widget.appBar,
+      body: widget.body,
+      backgroundColor: widget.backgroundColor ?? Colors.white, // Apply the background color
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

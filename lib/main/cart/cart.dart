@@ -1,34 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:piloolo/components/pagebar.dart';
-import 'package:piloolo/components/shopping_cart_action.dart';
-import 'widgets/top_navigation_bar.dart'; // Import the custom top navigation bar
 
-class CategoryGenderPage extends StatefulWidget {
-  const CategoryGenderPage({super.key});
+class CartPage extends StatefulWidget {
+  const CartPage({super.key});
 
   @override
-  CategoryGenderPageState createState() => CategoryGenderPageState();
+  CartPageState createState() => CartPageState();
 }
 
-class CategoryGenderPageState extends State<CategoryGenderPage> {
+class CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      selectedIndex: 1, // Category index for the bottom navigation
+      selectedIndex: 2, // Category index for the bottom navigation
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         automaticallyImplyLeading: false, // Removes the back arrow
-        actions: const [
-          ShoppingCartAction(), // Use the shopping cart action from the new file
-        ],
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white, // Set the background color to white
       body: const Column(
         children: [
-          TopNavigationBar(
-            selectedIndex: 0, // 0 is for 'All'
-          ),
           Expanded(
             child: SafeArea(
               child: Center(
@@ -36,11 +28,11 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'All Category Page',
+                      'Cart Page',
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 20),
-                    Text('This is the default page for All Categories'),
+                    Text('This is the default page for All orders'),
                   ],
                 ),
               ),

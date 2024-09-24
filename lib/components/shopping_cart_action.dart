@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piloolo/main/cart/cart.dart';
 
 class ShoppingCartAction extends StatelessWidget {
   const ShoppingCartAction({super.key});
@@ -13,7 +14,8 @@ class ShoppingCartAction extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () {
-              // Handle add to cart action
+              //Navigate to another page after sign-in (e.g., CartPage)
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const CartPage()));
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
