@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:piloolo/main/cart/widget/cart_provider.dart';
 import 'package:piloolo/main/category/category_gender_page.dart';
-// import 'package:piloolo/pages/splash.dart';
-
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CartProvider(),
+      child: const MyApp(), // Wrap MyApp as a child
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Piloolo',
       debugShowCheckedModeBanner: false,
-      home: CategoryGenderPage(),
+      home: CategoryGenderPage(), // Ensure this page is under the provider's scope
     );
   }
 }
-

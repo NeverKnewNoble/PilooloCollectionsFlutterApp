@@ -88,7 +88,7 @@ class MainScaffoldState extends State<MainScaffold> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.blur_linear), label: 'Category'),
+          BottomNavigationBarItem(icon: Icon(Icons.category ), label: 'Category'),
           BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
           BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Me'),
         ],

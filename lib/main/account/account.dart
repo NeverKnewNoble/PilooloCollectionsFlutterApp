@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -24,26 +23,61 @@ class ProfilePageState extends State<ProfilePage> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: const Column(
-        children: [
-          Expanded(
-            child: SafeArea(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Account Page',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 20),
-                    Text('Account details'),
-                  ],
-                ),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Profile section
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  // Profile Picture
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage('images/salesimages/menblue.jpeg'), // Replace with your image path
+                  ),
+                  SizedBox(width: 16),
+                  // Name
+                  Text(
+                    'John Doe', // Replace with dynamic name if needed
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            // Divider line
+            const Divider(
+              thickness: 1,
+              color: Colors.grey,
+              indent: 16,
+              endIndent: 16,
+            ),
+            // Options list
+            Expanded(
+              child: ListView(
+                children: [
+                  // About Us button
+                  ListTile(
+                    leading: const Icon(Icons.info, color: Colors.black),
+                    title: const Text('About Us'),
+                    onTap: () {
+                      // Handle navigation to About Us page
+                    },
+                  ),
+                  // Logout button
+                  ListTile(
+                    leading: const Icon(Icons.logout, color: Colors.black),
+                    title: const Text('Logout'),
+                    onTap: () {
+                      // Handle logout functionality
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
