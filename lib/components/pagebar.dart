@@ -8,14 +8,16 @@ class MainScaffold extends StatefulWidget {
   final Widget body;
   final int selectedIndex;
   final AppBar? appBar;
-  final Color? backgroundColor; // Background color
+  final Color? backgroundColor;
+  final Widget? drawer; // Add the drawer parameter as Widget
 
   const MainScaffold({
     super.key,
     required this.body,
     required this.selectedIndex,
     this.appBar,
-    this.backgroundColor, // Accept the background color
+    this.backgroundColor,
+    this.drawer, // Make drawer optional
   });
 
   @override
@@ -82,6 +84,7 @@ class MainScaffoldState extends State<MainScaffold> {
       appBar: widget.appBar,
       body: widget.body,
       backgroundColor: widget.backgroundColor ?? Colors.white, // Apply the background color
+      drawer: widget.drawer, // Use the drawer in Scaffold
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -92,7 +95,7 @@ class MainScaffoldState extends State<MainScaffold> {
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFFFF0000),
         unselectedItemColor: Colors.black,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 255, 181, 181),
         onTap: _onItemTapped,
       ),
     );

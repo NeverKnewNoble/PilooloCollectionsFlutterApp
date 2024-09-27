@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piloolo/main/category/category_gender_page.dart'; // Default page
 import 'package:piloolo/main/category/pages/men_page.dart'; // Men page
+import 'package:piloolo/main/category/pages/trad_wear.dart';
 import 'package:piloolo/main/category/pages/women_page.dart'; // Women page
 
 class TopNavigationBar extends StatefulWidget {
@@ -25,6 +26,9 @@ class TopNavigationBarState extends State<TopNavigationBar> {
       break;
     case 2:
       page = const WomenPage();
+      break;
+    case 3:
+      page = const TradWearPage();
       break;
     default:
       page = const CategoryGenderPage();
@@ -62,6 +66,7 @@ class TopNavigationBarState extends State<TopNavigationBar> {
           _buildNavItem('All', 0),
           _buildNavItem('Men', 1),
           _buildNavItem('Women', 2),
+          _buildNavItem('Traditional', 3),
         ],
       ),
     );
