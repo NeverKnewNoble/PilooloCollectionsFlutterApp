@@ -73,24 +73,24 @@ class HomePageState extends State<HomePage> {
                 child: Row(
                   children: [
                     CategoryItem(
-                      imagePath: 'images/salesimages/real pic/1714102778d58511b91a3cfea3e0d966fcd73335be_thumbnail_288x.jpeg',
-                      title: 'Jackets',
-                    ),
-                    CategoryItem(
                       imagePath: 'images/salesimages/real pic/1721025213a33f67ae5f77d58e2987c90821a7c102_thumbnail_405x552.jpeg',
                       title: 'Hoodies',
+                    ),
+                    CategoryItem(
+                      imagePath: 'images/salesimages/real pic/shirt.jpg',
+                      title: 'Shirt',
                     ),
                     CategoryItem(
                       imagePath: 'images/salesimages/real pic/1721981555d2c254458f75b4b2c77a934e51f60b18_thumbnail_405x552.jpeg',
                       title: 'T-Shirts',
                     ),
                     CategoryItem(
-                      imagePath: 'images/salesimages/real pic/1696435347e62fcbdf4fd5c9d5c86048c071bf8c92_thumbnail_405x552.jpeg',
-                      title: 'Pants',
+                      imagePath: 'images/salesimages/real pic/carttrousers.jpg',
+                      title: 'Trousers',
                     ),
                     CategoryItem(
-                      imagePath: 'images/salesimages/real pic/20326334_50383775_2048.jpg',
-                      title: 'Hats',
+                      imagePath: 'images/salesimages/real pic/cat-office.jpg',
+                      title: 'Suit | Coat',
                     ),
                   ],
                 ),

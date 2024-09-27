@@ -126,27 +126,6 @@ class MenLeftDrawer extends StatelessWidget {
                   ),
                 ),
               ),
-              title: const Text('Belt',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle logout
-              },
-            ),
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/catbelt.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
               title: const Text('Shorts',
                 style: TextStyle(
                 fontWeight: FontWeight.bold,

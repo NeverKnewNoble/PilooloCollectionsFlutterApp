@@ -3,8 +3,6 @@ import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/main/home/widgets/displays_items.dart';
 import 'widgets/top_navigation_bar.dart';
-// Import the left drawer
-import 'package:piloolo/main/category/widgets/all_leftdrawer.dart'; // Make sure this import is correct
 
 class CategoryGenderPage extends StatefulWidget {
   const CategoryGenderPage({super.key});
@@ -24,26 +22,11 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         automaticallyImplyLeading: false, // Removes the back arrow
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.black), // Add a menu icon
-              onPressed: () {
-                // Open the drawer
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
-        ),
         actions: const [
           ShoppingCartAction(), // Use the shopping cart action from the new file
         ],
       ),
       backgroundColor: Colors.white,
-      drawer: const AllLeftDrawer(
-        // Optionally pass onCategoryTap if you want to handle category selection
-        // onCategoryTap: _handleCategoryTap,
-      ),
       body: Column(
         children: [
           const TopNavigationBar(
