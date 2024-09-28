@@ -37,7 +37,7 @@ class WomenLeftDrawer extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/cat-office.jpg'),
+                    image: AssetImage('images/salesimages/real pic/w-dress.jpeg'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -58,7 +58,7 @@ class WomenLeftDrawer extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/shirt.jpg'),
+                    image: AssetImage('images/salesimages/real pic/w-top.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -79,7 +79,7 @@ class WomenLeftDrawer extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/catt-shirt.jpg'),
+                    image: AssetImage('images/salesimages/real pic/w-blouse.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -100,7 +100,7 @@ class WomenLeftDrawer extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/carttrousers.jpg'),
+                    image: AssetImage('images/salesimages/real pic/w-trousers.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -121,7 +121,7 @@ class WomenLeftDrawer extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/catbelt.jpg'),
+                    image: AssetImage('images/salesimages/real pic/w-t-shirt.jpeg'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -142,7 +142,7 @@ class WomenLeftDrawer extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/catbelt.jpg'),
+                    image: AssetImage('images/salesimages/real pic/w-suit.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -163,7 +163,7 @@ class WomenLeftDrawer extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/catbelt.jpg'),
+                    image: AssetImage('images/salesimages/real pic/w-skirt.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -184,7 +184,7 @@ class WomenLeftDrawer extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/catbelt.jpg'),
+                    image: AssetImage('images/salesimages/real pic/w-jeans.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -205,7 +205,7 @@ class WomenLeftDrawer extends StatelessWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/catbelt.jpg'),
+                    image: AssetImage('images/salesimages/real pic/w-shoes.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
