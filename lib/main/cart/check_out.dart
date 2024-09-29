@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piloolo/main/cart/payment.dart';
 
 class CheckOutPage extends StatefulWidget {
   const CheckOutPage({super.key});
@@ -12,6 +13,12 @@ class _CheckOutPageState extends State<CheckOutPage> {
   String? _selectedCountry = 'Ghana';
   String _phonePrefix = '+233';
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _zipCodeController = TextEditingController();
+  final TextEditingController _address1Controller = TextEditingController();
+  final TextEditingController _address2Controller = TextEditingController();
 
   // Countries and their respective phone prefixes
   final Map<String, String> _countryPhonePrefixes = {
@@ -62,9 +69,10 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // First Name
               TextFormField(
+                controller: _firstNameController,
                 decoration: const InputDecoration(
                   labelText: 'First Name',
                   border: OutlineInputBorder(),
@@ -80,6 +88,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
               // Last Name
               TextFormField(
+                controller: _lastNameController,
                 decoration: const InputDecoration(
                   labelText: 'Last Name',
                   border: OutlineInputBorder(),
@@ -127,6 +136,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
               // City
               TextFormField(
+                controller: _cityController,
                 decoration: const InputDecoration(
                   labelText: 'City',
                   border: OutlineInputBorder(),
@@ -151,6 +161,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
               // Post/Zip Code
               TextFormField(
+                controller: _zipCodeController,
                 decoration: const InputDecoration(
                   labelText: 'Post/Zip Code',
                   border: OutlineInputBorder(),
@@ -166,6 +177,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
               // Address Line 1
               TextFormField(
+                controller: _address1Controller,
                 decoration: const InputDecoration(
                   labelText: 'Address Line 1',
                   border: OutlineInputBorder(),
@@ -181,6 +193,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
               // Address Line 2 (Optional)
               TextFormField(
+                controller: _address2Controller,
                 decoration: const InputDecoration(
                   labelText: 'Address Line 2 (Optional)',
                   border: OutlineInputBorder(),
@@ -192,10 +205,16 @@ class _CheckOutPageState extends State<CheckOutPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Process the checkout here
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Processing Checkout...'),
+                    // Pass the collected data to the PaymentPage
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PaymentPage(
+                          location: _selectedCountry!,
+                          address: _address1Controller.text,
+                          city: _cityController.text,
+                          zipCode: _zipCodeController.text,
+                        ),
                       ),
                     );
                   }
