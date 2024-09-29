@@ -13,8 +13,13 @@ class WomenPage extends StatefulWidget {
 }
 
 class WomenPageState extends State<WomenPage> {
-  final String _selectedCategory = 'All';
- 
+  String _selectedCategory = 'All'; // Changed to mutable state
+
+  void _handleCategoryTap(String category) {
+    setState(() {
+      _selectedCategory = category; // Update the selected category
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +45,8 @@ class WomenPageState extends State<WomenPage> {
         ],
       ),
       backgroundColor: Colors.white,
-      drawer: const WomenLeftDrawer(
-        // Optionally pass onCategoryTap if you want to handle category selection
-        // onCategoryTap: _handleCategoryTap,
+      drawer: WomenLeftDrawer(
+        onCategoryTap: _handleCategoryTap, // Pass the callback to the drawer
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // Align content to the start
@@ -59,7 +63,7 @@ class WomenPageState extends State<WomenPage> {
                   children: [
                     // Align the category text to the top-left
                     Text(
-                      _selectedCategory,
+                      _selectedCategory, // Display the current selected category
                       style: const TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -87,7 +91,6 @@ class WomenPageState extends State<WomenPage> {
                                 title: 'SHEIN Clasi Floral Print Puff Sleeve Belted Dress',
                                 price: '\$20.00',
                                 imageHeight: 250,
-                                
                               );
                             case 1:
                               return const ProductCard(
@@ -95,7 +98,6 @@ class WomenPageState extends State<WomenPage> {
                                 title: 'EMERY ROSE Womens Casual Floral Long Sleeve',
                                 price: '\$24.00',
                                 imageHeight: 250, 
-                                
                               );
                             case 2:
                               return const ProductCard(
@@ -103,7 +105,6 @@ class WomenPageState extends State<WomenPage> {
                                 title: 'SHEIN Essnce Long Sleeve Sweater',
                                 price: '\$32.00',
                                 imageHeight: 250,
-                                
                               );
                             case 3:
                               return const ProductCard(
@@ -111,7 +112,6 @@ class WomenPageState extends State<WomenPage> {
                                 title: 'SHEIN WOMANS Stylish Jacket',
                                 price: '\$22.00',
                                 imageHeight: 250,
-                                
                               );
                             default:
                               return const SizedBox();

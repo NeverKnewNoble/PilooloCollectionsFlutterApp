@@ -13,8 +13,13 @@ class MenPage extends StatefulWidget {
 }
 
 class MenPageState extends State<MenPage> {
-  final String _selectedCategory = 'All';
- 
+  String _selectedCategory = 'All'; // Changed to mutable state
+
+  void _handleCategoryTap(String category) {
+    setState(() {
+      _selectedCategory = category; // Update the selected category
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +45,8 @@ class MenPageState extends State<MenPage> {
         ],
       ),
       backgroundColor: Colors.white,
-      drawer: const MenLeftDrawer(
-        // Optionally pass onCategoryTap if you want to handle category selection
-        // onCategoryTap: _handleCategoryTap,
+      drawer: MenLeftDrawer(
+        onCategoryTap: _handleCategoryTap, // Pass the callback to the drawer
       ),
       body: Column(
         children: [
@@ -58,7 +62,7 @@ class MenPageState extends State<MenPage> {
                   children: [
                     // Align the category text to the top-left
                     Text(
-                      _selectedCategory,
+                      _selectedCategory, // Display the current selected category
                       style: const TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,

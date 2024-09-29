@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:piloolo/main/category/widgets/range_slider.dart';
 
 class WomenLeftDrawer extends StatelessWidget {
-  const WomenLeftDrawer({super.key});
+  final Function(String) onCategoryTap;
+
+  const WomenLeftDrawer({super.key, required this.onCategoryTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,218 +22,63 @@ class WomenLeftDrawer extends StatelessWidget {
               child: Align(
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
-                'Women Categories',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+                  'Women Categories',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
                 ),
               ),
-              )
-              
             ),
             // Drawer Menu Items
-            ListTile(
-              leading: Container(
-                width: 40, // Set the width of the circle
-                height: 40, // Set the height of the circle
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/w-dress.jpeg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              title: const Text('Dresses',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to Home
-              },
-            ),
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/w-top.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              title: const Text('Tops',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to Profile
-              },
-            ),
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/w-blouse.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              title: const Text('Blouses',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to Settings
-              },
-            ),
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/w-trousers.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              title: const Text('Trousers',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle logout
-              },
-            ),
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/w-t-shirt.jpeg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              title: const Text('T-shirt',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle logout
-              },
-            ),
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/w-suit.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              title: const Text('Suits | Blazzers',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle logout
-              },
-            ),
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/w-skirt.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              title: const Text('Skirts',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle logout
-              },
-            ),
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/w-jeans.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              title: const Text('Jeans',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle logout
-              },
-            ),
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: AssetImage('images/salesimages/real pic/w-shoes.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              title: const Text('Shoes',
-                style: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
-              onTap: () {
-                Navigator.pop(context);
-                // Handle logout
-              },
-            ),
+            buildListTile(context, 'All', onCategoryTap),
+            buildListTile(context, 'Dresses', onCategoryTap, 'images/salesimages/real pic/w-dress.jpeg'),
+            buildListTile(context, 'Tops', onCategoryTap, 'images/salesimages/real pic/w-top.jpg'),
+            buildListTile(context, 'Blouses', onCategoryTap, 'images/salesimages/real pic/w-blouse.jpg'),
+            buildListTile(context, 'Trousers', onCategoryTap, 'images/salesimages/real pic/w-trousers.jpg'),
+            buildListTile(context, 'T-shirt', onCategoryTap, 'images/salesimages/real pic/w-t-shirt.jpeg'),
+            buildListTile(context, 'Suits | Blazers', onCategoryTap, 'images/salesimages/real pic/w-suit.jpg'),
+            buildListTile(context, 'Skirts', onCategoryTap, 'images/salesimages/real pic/w-skirt.jpg'),
+            buildListTile(context, 'Jeans', onCategoryTap, 'images/salesimages/real pic/w-jeans.jpg'),
+            buildListTile(context, 'Shoes', onCategoryTap, 'images/salesimages/real pic/w-shoes.jpg'),
             const SizedBox(height: 100),
-        
-        
+
             // Add the RangeSlider widget
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 2.0),
               child: RangeSliderExample(),
             ),
-        
-        
           ],
         ),
       ),
+    );
+  }
+
+  ListTile buildListTile(BuildContext context, String title, Function(String) onTap, [String? imagePath]) {
+    return ListTile(
+      leading: imagePath != null
+          ? Container(
+              width: 40, // Set the width of the circle
+              height: 40, // Set the height of the circle
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage(imagePath),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
+          : const SizedBox(width: 40, height: 10),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      onTap: () {
+        Navigator.pop(context);
+        onTap(title); // Call the onCategoryTap callback with the tapped category name
+      },
     );
   }
 }
