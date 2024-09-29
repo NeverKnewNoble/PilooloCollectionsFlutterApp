@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
+import 'package:piloolo/pages/login.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -70,6 +71,11 @@ class ProfilePageState extends State<ProfilePage> {
                     leading: const Icon(Icons.logout, color: Colors.black),
                     title: const Text('Logout'),
                     onTap: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignInPage()),
+                    );
                       // Handle logout functionality
                     },
                   ),

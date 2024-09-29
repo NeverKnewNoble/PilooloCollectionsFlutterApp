@@ -5,6 +5,12 @@ class CartProvider extends ChangeNotifier {
 
   List<CartItem> get cart => _cart;
 
+  // Clear the cart items
+  void clearCart() {
+    _cart.clear();
+    notifyListeners(); // Notify listeners to update the UI
+  }
+
   // Add item to the cart
   void addItem(CartItem item) {
     _cart.add(item);

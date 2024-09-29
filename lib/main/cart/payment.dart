@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
+import 'package:piloolo/main/cart/widget/success_animation.dart'; // Import the animation
 
 class PaymentPage extends StatefulWidget {
   final String location;
@@ -23,6 +24,7 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   bool _payWithCard = false;
   bool _payWithMoMo = false;
+  bool _showAnimation = false; // To control animation
 
   // Mock shipping fee, VAT, and checkout information (replace with real data)
   final double shippingFee = 5.00;
@@ -32,6 +34,23 @@ class _PaymentPageState extends State<PaymentPage> {
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
+    // Show the animation if _showAnimation is true
+    if (_showAnimation) {
+      return SuccessAnimation(
+        onComplete: () {
+          // Access the CartProvider instance
+          final cartProvider = Provider.of<CartProvider>(context, listen: false);
+          
+          // Clear the cart
+          cartProvider.clearCart();
+          
+          // Navigate back to HomePage
+          Navigator.pushNamedAndRemoveUntil(context, 'HomePage', (route) => false);
+        },
+      );
+    }
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -39,7 +58,7 @@ class _PaymentPageState extends State<PaymentPage> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: SingleChildScrollView( // Make the page scrollable
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -72,7 +91,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Card Number',
-                    prefixIcon: Icon(Icons.credit_card), // Credit card icon
+                    prefixIcon: Icon(Icons.credit_card),
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
@@ -159,7 +178,7 @@ class _PaymentPageState extends State<PaymentPage> {
               // Display Checkout Info Section
               buildCheckoutInfoSection(),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 50),
 
               // Checkout Box with Shipping Fee, VAT, and Submit Order button
               buildCheckOutBox(cartProvider),
@@ -225,7 +244,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
               ),
               Text(
-                '\$${subtotal.toStringAsFixed(2)}', // 2 decimal places for subtotal
+                '\$${subtotal.toStringAsFixed(2)}',
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ],
@@ -241,7 +260,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
               ),
               Text(
-                '\$${shippingFee.toStringAsFixed(2)}', // 2 decimal places for shipping fee
+                '\$${shippingFee.toStringAsFixed(2)}',
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ],
@@ -257,7 +276,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
               ),
               Text(
-                '\$${vatAmount.toStringAsFixed(2)}', // 2 decimal places for VAT
+                '\$${vatAmount.toStringAsFixed(2)}',
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ],
@@ -273,7 +292,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               Text(
-                '\$${total.toStringAsFixed(2)}', // 2 decimal places for total
+                '\$${total.toStringAsFixed(2)}',
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ],
@@ -287,15 +306,10 @@ class _PaymentPageState extends State<PaymentPage> {
               minimumSize: const Size(double.infinity, 55),
             ),
             onPressed: () {
-              // Add your checkout functionality here
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Order Submitted: \$${total.toStringAsFixed(2)}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              );
+              // Trigger the animation
+              setState(() {
+                _showAnimation = true;
+              });
             },
             child: Text(
               "Submit Order (\$${total.toStringAsFixed(2)})",
