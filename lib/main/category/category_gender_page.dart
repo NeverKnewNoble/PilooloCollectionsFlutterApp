@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
-import 'package:piloolo/main/home/widgets/displays_items.dart';
+import 'package:piloolo/components/displays_items.dart';
 import 'widgets/top_navigation_bar.dart';
 
 class CategoryGenderPage extends StatefulWidget {
@@ -69,6 +69,7 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                                 title: 'SHEIN Clasi Floral Print Puff Sleeve Belted Dress',
                                 price: '\$20.00',
                                 imageHeight: 250,
+                              
                               );
                             case 1:
                               return const ProductCard(
@@ -76,6 +77,7 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                                 title: 'Manfinity Homme Men Striped Print Quarter Zip Polo Shirt',
                                 price: '\$10.99',
                                 imageHeight: 250,
+                              
                               );
                             case 2:
                               return const ProductCard(
@@ -83,6 +85,7 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                                 title: 'EMERY ROSE Womens Casual Floral Long Sleeve',
                                 price: '\$24.00',
                                 imageHeight: 250,
+                              
                               );
                             case 3:
                               return const ProductCard(
@@ -90,6 +93,7 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                                 title: 'Manfinity Homme Men Striped Print Colorblock Polo Shirt',
                                 price: '\$11.00',
                                 imageHeight: 250,
+                              
                               );
                             case 4:
                               return const ProductCard(
@@ -97,6 +101,7 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                                 title: 'SHEIN Essnce Long Sleeve Sweater',
                                 price: '\$32.00',
                                 imageHeight: 250,
+                              
                               );
                             case 5:
                               return const ProductCard(
@@ -104,6 +109,7 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                                 title: 'SHEIN WOMANS Stylish Jacket',
                                 price: '\$22.00',
                                 imageHeight: 250,
+                              
                               );
                             case 6:
                               return const ProductCard(
@@ -111,6 +117,7 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                                 title: 'Mens Blue Collar Shirt',
                                 price: '\$22.99',
                                 imageHeight: 250,
+                              
                               );
                             case 7:
                               return const ProductCard(
@@ -118,6 +125,7 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                                 title: 'Mens Green Collar Shirt',
                                 price: '\$22.99',
                                 imageHeight: 250,
+                              
                               );
                             default:
                               return const SizedBox();

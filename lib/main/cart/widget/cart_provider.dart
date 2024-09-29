@@ -40,15 +40,17 @@ class CartProvider extends ChangeNotifier {
 class CartItem {
   final String image;
   final String title;
-  final String category;
   final double price;
+  final String size; // Add the size field
   int quantity;
 
   CartItem({
     required this.image,
     required this.title,
-    required this.category,
     required this.price,
+    required this.size, // Initialize size
     this.quantity = 1,
   });
 }
+
+

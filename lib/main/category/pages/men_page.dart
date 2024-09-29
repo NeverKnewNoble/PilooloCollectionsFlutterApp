@@ -3,7 +3,7 @@ import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/main/category/widgets/men_leftdrawer.dart';
 import 'package:piloolo/main/category/widgets/top_navigation_bar.dart';
-import 'package:piloolo/main/home/widgets/displays_items.dart'; // Import the custom top navigation bar
+import 'package:piloolo/components/displays_items.dart'; // Import the custom top navigation bar
 
 class MenPage extends StatefulWidget {
   const MenPage({super.key});
@@ -14,6 +14,7 @@ class MenPage extends StatefulWidget {
 
 class MenPageState extends State<MenPage> {
   final String _selectedCategory = 'All';
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -84,21 +85,21 @@ class MenPageState extends State<MenPage> {
                                 imagePath: 'images/salesimages/stripedbrown.webp',
                                 title: 'Manfinity Homme Men Striped Print Quarter Zip Polo Shirt',
                                 price: '\$10.99',
-                                imageHeight: 250,
+                                imageHeight: 250, 
                               );
                             case 1:
                               return const ProductCard(
                                 imagePath: 'images/salesimages/stripped blue.webp',
                                 title: 'Manfinity Homme Men Striped Print Colorblock Polo Shirt',
                                 price: '\$11.00',
-                                imageHeight: 250,
+                                imageHeight: 250, 
                               );
                             case 2:
                               return const ProductCard(
                                 imagePath: 'images/salesimages/menblue.jpeg',
                                 title: 'Mens Blue Collar Shirt',
                                 price: '\$22.99',
-                                imageHeight: 250,
+                                imageHeight: 250, 
                               );
                             case 3:
                               return const ProductCard(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/main/category/widgets/top_navigation_bar.dart';
-import 'package:piloolo/main/home/widgets/displays_items.dart'; // Import the custom top navigation bar
+import 'package:piloolo/components/displays_items.dart'; // Import the custom top navigation bar
 
 class TradWearPage extends StatefulWidget {
   const TradWearPage({super.key});
@@ -13,6 +13,7 @@ class TradWearPage extends StatefulWidget {
 
 class WomenPageState extends State<TradWearPage> {
   final String _selectedCategory = 'All';
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +76,7 @@ class WomenPageState extends State<TradWearPage> {
                                 imagePath: 'images/salesimages/Naablue.jpg',
                                 title: 'EMERY ROSE Womens Casual Floral Long Sleeve',
                                 price: '\$24.00',
-                                imageHeight: 250,
+                                imageHeight: 250, 
                               );
                             case 2:
                               return const ProductCard(
@@ -89,7 +90,7 @@ class WomenPageState extends State<TradWearPage> {
                                 imagePath: 'images/salesimages/Naagreen.jpg',
                                 title: 'SHEIN WOMANS Stylish Jacket',
                                 price: '\$22.00',
-                                imageHeight: 250,
+                                imageHeight: 250, 
                               );
                             default:
                               return const SizedBox();

@@ -3,7 +3,7 @@ import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/main/category/widgets/top_navigation_bar.dart';
 import 'package:piloolo/main/category/widgets/women_leftdrawer.dart';
-import 'package:piloolo/main/home/widgets/displays_items.dart'; // Import the custom top navigation bar
+import 'package:piloolo/components/displays_items.dart'; // Import the custom top navigation bar
 
 class WomenPage extends StatefulWidget {
   const WomenPage({super.key});
@@ -14,6 +14,7 @@ class WomenPage extends StatefulWidget {
 
 class WomenPageState extends State<WomenPage> {
   final String _selectedCategory = 'All';
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +87,15 @@ class WomenPageState extends State<WomenPage> {
                                 title: 'SHEIN Clasi Floral Print Puff Sleeve Belted Dress',
                                 price: '\$20.00',
                                 imageHeight: 250,
+                                
                               );
                             case 1:
                               return const ProductCard(
                                 imagePath: 'images/salesimages/flowfront.jpeg',
                                 title: 'EMERY ROSE Womens Casual Floral Long Sleeve',
                                 price: '\$24.00',
-                                imageHeight: 250,
+                                imageHeight: 250, 
+                                
                               );
                             case 2:
                               return const ProductCard(
@@ -100,6 +103,7 @@ class WomenPageState extends State<WomenPage> {
                                 title: 'SHEIN Essnce Long Sleeve Sweater',
                                 price: '\$32.00',
                                 imageHeight: 250,
+                                
                               );
                             case 3:
                               return const ProductCard(
@@ -107,6 +111,7 @@ class WomenPageState extends State<WomenPage> {
                                 title: 'SHEIN WOMANS Stylish Jacket',
                                 price: '\$22.00',
                                 imageHeight: 250,
+                                
                               );
                             default:
                               return const SizedBox();

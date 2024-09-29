@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:piloolo/main/account/account.dart';
 import 'package:piloolo/main/cart/cart.dart';
 import 'package:piloolo/main/category/category_gender_page.dart';
@@ -9,7 +10,7 @@ class MainScaffold extends StatefulWidget {
   final int selectedIndex;
   final AppBar? appBar;
   final Color? backgroundColor;
-  final Widget? drawer; // Add the drawer parameter as Widget
+  final Widget? drawer;
 
   const MainScaffold({
     super.key,
@@ -17,7 +18,7 @@ class MainScaffold extends StatefulWidget {
     required this.selectedIndex,
     this.appBar,
     this.backgroundColor,
-    this.drawer, // Make drawer optional
+    this.drawer,
   });
 
   @override
@@ -47,23 +48,23 @@ class MainScaffoldState extends State<MainScaffold> {
         page = const CategoryGenderPage();
         break;
       case 2:
-        page = const CartPage(); // Example placeholder
+        page = const CartPage();
         break;
       case 3:
-        page = const ProfilePage(); // Example placeholder
+        page = const ProfilePage();
         break;
       default:
         page = const HomePage();
     }
 
-    // Use PageRouteBuilder for smooth transition
+    // Navigate to the new page with a smooth transition
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(0.0, 1.0); // Start from below
-          const end = Offset.zero; // End at current page position
+          const begin = Offset(0.0, 1.0);
+          const end = Offset.zero;
           const curve = Curves.easeInOut;
 
           var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -83,20 +84,45 @@ class MainScaffoldState extends State<MainScaffold> {
     return Scaffold(
       appBar: widget.appBar,
       body: widget.body,
-      backgroundColor: widget.backgroundColor ?? Colors.white, // Apply the background color
-      drawer: widget.drawer, // Use the drawer in Scaffold
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.category ), label: 'Category'),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Me'),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xFFFF0000),
-        unselectedItemColor: Colors.black,
-        backgroundColor: const Color.fromARGB(255, 255, 181, 181),
-        onTap: _onItemTapped,
+      backgroundColor: widget.backgroundColor ?? Colors.white,
+      drawer: widget.drawer,
+      // Wrap GNav in a container to apply borderRadius
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 255, 181, 181),
+            borderRadius: BorderRadius.circular(30), // Apply rounded corners to the container
+          ),
+          child: GNav(
+            gap: 8,
+            padding: const EdgeInsets.all(16),
+            activeColor: Colors.white,
+            tabBorderRadius: 30, // Set border radius for tabs
+            color: Colors.black,
+            tabBackgroundColor: const Color(0xFFFF0000),
+            selectedIndex: _selectedIndex,
+            onTabChange: (index) => _onItemTapped(index),
+            tabs: const [
+              GButton(
+                icon: Icons.home,
+                text: 'Home',
+              ),
+              GButton(
+                icon: Icons.category,
+                text: 'Category',
+              ),
+              GButton(
+                icon: Icons.shopping_cart,
+                text: 'Cart',
+              ),
+              GButton(
+                icon: Icons.account_circle,
+                text: 'Me',
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

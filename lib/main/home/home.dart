@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piloolo/main/home/widgets/category_items.dart';
-import 'package:piloolo/main/home/widgets/displays_items.dart';
+import 'package:piloolo/components/displays_items.dart';
 import 'package:piloolo/main/home/widgets/image_slider.dart';
 import 'package:piloolo/main/home/widgets/search_bar.dart';
 import 'package:piloolo/components/pagebar.dart'; 
@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int _currentSlide = 0;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +145,7 @@ class HomePageState extends State<HomePage> {
                           title: 'SHEIN Clasi Floral Print Puff Sleeve Belted Dress',
                           price: '\$20.00',
                           imageHeight: 250,
+                          
                         );
                       case 1:
                         return const ProductCard(
@@ -151,6 +153,7 @@ class HomePageState extends State<HomePage> {
                           title: 'Manfinity Homme Men Striped Print Quarter Zip Polo Shirt',
                           price: '\$10.99',
                           imageHeight: 250,
+                          
                         );
                       case 2:
                         return const ProductCard(
@@ -158,6 +161,7 @@ class HomePageState extends State<HomePage> {
                           title: 'EMERY ROSE Womens Casual Floral Long Sleeve',
                           price: '\$24.00',
                           imageHeight: 250,
+                          
                         );
                       case 3:
                         return const ProductCard(
@@ -165,6 +169,7 @@ class HomePageState extends State<HomePage> {
                           title: 'Manfinity Homme Men Striped Print Colorblock Polo Shirt',
                           price: '\$11.00',
                           imageHeight: 250,
+                          
                         );
                       case 4:
                         return const ProductCard(
@@ -172,6 +177,7 @@ class HomePageState extends State<HomePage> {
                           title: 'SHEIN Essnce Long Sleeve Sweater',
                           price: '\$32.00',
                           imageHeight: 250,
+                          
                         );
                       case 5:
                         return const ProductCard(
@@ -179,6 +185,7 @@ class HomePageState extends State<HomePage> {
                           title: 'SHEIN WOMANS Stylish Jacket',
                           price: '\$22.00',
                           imageHeight: 250,
+                          
                         );
                       case 6:
                         return const ProductCard(
@@ -186,6 +193,7 @@ class HomePageState extends State<HomePage> {
                           title: 'Mens Blue Collar Shirt',
                           price: '\$22.99',
                           imageHeight: 250,
+                          
                         );
                       case 7:
                         return const ProductCard(
@@ -193,6 +201,7 @@ class HomePageState extends State<HomePage> {
                           title: 'Mens Green Collar Shirt',
                           price: '\$22.99',
                           imageHeight: 250,
+                          
                         );
                       default:
                         return const SizedBox();

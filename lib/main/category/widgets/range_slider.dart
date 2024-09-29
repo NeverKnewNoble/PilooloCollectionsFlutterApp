@@ -25,7 +25,6 @@ class RangeSliderExample extends StatefulWidget {
 }
 
 class _RangeSliderExampleState extends State<RangeSliderExample> {
-  RangeValues _currentRangeValues = const RangeValues(40, 80);
 
   @override
   Widget build(BuildContext context) {
@@ -41,23 +40,52 @@ class _RangeSliderExampleState extends State<RangeSliderExample> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16), // Add some spacing between the text and slider
-          RangeSlider(
-            values: _currentRangeValues,
-            max: 100,
-            divisions: 5,
-            activeColor: const Color(0xFFFF0000), // Set active (selected) color
-            inactiveColor: const Color.fromARGB(255, 255, 181, 181), // Set inactive (unselected) color
-            labels: RangeLabels(
-              _currentRangeValues.start.round().toString(),
-              _currentRangeValues.end.round().toString(),
-            ),
-            onChanged: (RangeValues values) {
-              setState(() {
-                _currentRangeValues = values;
-              });
-            },
+          const SizedBox(height: 16), // Add some spacing after the text
+
+          // Row for "From" and "To" input fields
+          Row(
+            children: [
+              SizedBox(
+                width: 60,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    // Handle value change for "From" box if necessary
+                  },
+                ),
+              ),
+              const SizedBox(width: 16), // Spacing between "From" and "To" elements
+
+              // "To" input
+              const Text(
+                '> = <',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(width: 8), // Spacing between text and input box
+              SizedBox(
+                width: 60,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    // Handle value change for "To" box if necessary
+                  },
+                ),
+              ),
+            ],
           ),
+          
         ],
       ),
     );

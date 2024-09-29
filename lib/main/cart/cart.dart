@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piloolo/main/cart/check_out.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/components/pagebar.dart';
@@ -50,101 +51,88 @@ class CartPageState extends State<CartPage> {
                   final item = cartItems[index];
                   return Padding(
                     padding: const EdgeInsets.all(15),
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade200,
-                                blurRadius: 6,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade200,
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
                           ),
-                          padding: const EdgeInsets.all(20),
-                          child: Row(
-                            children: [
-                              // Item Image
-                              Container(
-                                height: 100,
-                                width: 90,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.grey.shade200,
-                                ),
-                                child: Image.asset(item.image),
-                              ),
-                              const SizedBox(width: 10),
-                              // Item Details
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.title,
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    item.category,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    "\$${item.price}",
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                                  ),
-                                ],
-                              )
-                            ],
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Item Image
+                          Container(
+                            height: 100,
+                            width: 90,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.grey.shade200,
+                            ),
+                            child: Image.asset(item.image),
                           ),
-                        ),
-                        // Remove Item and Quantity Control
-                        Positioned(
-                          top: 35,
-                          right: 35,
-                          child: Column(
-                            children: [
-                              // Remove Item Button
-                              IconButton(
-                                onPressed: () {
-                                  cartProvider.removeItem(index);
-                                },
-                                icon: const Icon(Icons.delete, color: Colors.red, size: 20),
-                              ),
-                              const SizedBox(height: 10),
-                              // Quantity Control
-                              Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.grey.shade200,
-                                  border: Border.all(color: Colors.grey.shade400, width: 2),
+                          const SizedBox(width: 10),
+                          // Item Details
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _truncateTitle(item.title),
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                 ),
-                                child: Row(
-                                  children: [
-                                    buildQuantityControl(Icons.add, index),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      item.quantity.toString(),
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    buildQuantityControl(Icons.remove, index),
-                                  ],
+                                const SizedBox(height: 10),
+                                Text(
+                                  '\$${item.price.toStringAsFixed(2)}', // String interpolation for price
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                 ),
-                              ),
-                            ],
+                                // Size Display
+                                Text(
+                                  'Size: ${item.size}', // Display the size
+                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                ),
+                                // Quantity Control
+                                const SizedBox(height: 10),
+                                Container(
+                                  height: 40,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: const Color.fromARGB(255, 255, 181, 181),
+                                    border: Border.all(color: const Color.fromARGB(255, 255, 181, 181), width: 2),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      buildQuantityControl(Icons.remove, index),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        '${item.quantity}', // String interpolation for quantity
+                                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      buildQuantityControl(Icons.add, index),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                          // Stagnant Delete Button
+                          IconButton(
+                            onPressed: () {
+                              cartProvider.removeItem(index);
+                            },
+                            icon: const Icon(Icons.delete, color: Colors.red, size: 24),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -156,6 +144,21 @@ class CartPageState extends State<CartPage> {
         ),
       ),
     );
+  }
+
+  // Helper function to truncate title
+  String _truncateTitle(String title) {
+    // Split the title into words
+    final words = title.split(' ');
+
+    // Check if the word count exceeds 3
+    if (words.length > 3) {
+      // Return the first 3 words joined by spaces and add ellipsis
+      return '${words.sublist(0, 3).join(' ')}...';
+    } else {
+      // If 3 or fewer words, return the title as is
+      return title;
+    }
   }
 
   // Checkout Box Widget
@@ -182,7 +185,7 @@ class CartPageState extends State<CartPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
               ),
               Text(
-                "\$${cartProvider.totalPrice()}",
+                '\$${cartProvider.totalPrice().toStringAsFixed(2)}', // 2 decimal places for subtotal
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ],
@@ -199,7 +202,7 @@ class CartPageState extends State<CartPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               Text(
-                "\$${cartProvider.totalPrice()}",
+                '\$${cartProvider.totalPrice().toStringAsFixed(2)}', // 2 decimal places for total
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ],
@@ -212,6 +215,7 @@ class CartPageState extends State<CartPage> {
               minimumSize: const Size(double.infinity, 55),
             ),
             onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckOutPage()));
               // Add your checkout functionality here
             },
             child: const Text(
