@@ -31,7 +31,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: const BackButton(),
+        leading: const BackButton(color: Colors.black), // Ensure back button is visible
         actions: const [
           ShoppingCartAction(), // Use the shopping cart action from the new file
         ],
@@ -63,11 +63,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   Text(
                     widget.title,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  // Size selection
                   const Text(
                     'Size',
                     style: TextStyle(
@@ -76,7 +78,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-
                   // Size buttons container
                   Container(
                     decoration: BoxDecoration(
@@ -100,35 +101,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       }).toList(),
                     ),
                   ),
-
                   const SizedBox(height: 16),
 
-                  // Quantity control row
-                  Container(
-                    width: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.white, // Background color for the container
-                      borderRadius: BorderRadius.circular(20), // Rounded corners
-                      border: Border.all(color: Colors.grey.shade300), // Optional border color
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10), // Padding inside the container
-                    child: Row(
-                      children: [
-                        buildQuantityControl(Icons.remove),
-                        const SizedBox(width: 10),
-                        Text(
-                          '$quantity', // String interpolation for quantity
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold, 
-                            fontSize: 18,
-                            color: Colors.black, // Black color for quantity text
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        buildQuantityControl(Icons.add),
-                      ],
+                  // Quantity control
+                  const Text(
+                    'Quantity',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  buildQuantityControl(),
 
                   const SizedBox(height: 16),
 
@@ -151,7 +135,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     child: Row(
                       children: [
                         const Text(
-                          'Price',
+                          'Price:',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -227,24 +211,43 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   // Build quantity control widget
-  Widget buildQuantityControl(IconData icon) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (icon == Icons.add) {
-            quantity++;
-          } else if (icon == Icons.remove && quantity > 1) {
-            quantity--;
-          }
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white, // Set the background color to white
-          borderRadius: BorderRadius.circular(10), // Rounded corners
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Icon(icon, size: 16, color: Colors.black), // Icon with black color
+  Widget buildQuantityControl() {
+    return Container(
+      width: 150,
+      decoration: BoxDecoration(
+        color: Colors.white, // Background color for the container
+        borderRadius: BorderRadius.circular(20), // Rounded corners
+        border: Border.all(color: Colors.grey.shade300), // Optional border color
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10), // Padding inside the container
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                if (quantity > 1) quantity--;
+              });
+            },
+            child: const Icon(Icons.remove, size: 20),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            '$quantity',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(width: 10),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                quantity++;
+              });
+            },
+            child: const Icon(Icons.add, size: 20),
+          ),
+        ],
       ),
     );
   }

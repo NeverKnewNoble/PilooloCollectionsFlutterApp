@@ -3,6 +3,7 @@ import 'package:piloolo/main/cart/check_out.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/components/pagebar.dart';
+import 'package:piloolo/components/Product%20Detail/detail.dart'; // Import detail page
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -49,89 +50,119 @@ class CartPageState extends State<CartPage> {
                 itemCount: cartItems.length,
                 itemBuilder: (context, index) {
                   final item = cartItems[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade200,
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to ProductDetailsScreen with the cart item details
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailsScreen(
+                            imagePath: item.image, // Pass the image
+                            title: item.title, // Pass the title
+                            price: item.price.toString(), // Convert price to string
                           ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Item Image
-                          Container(
-                            height: 100,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
                               color: Colors.grey.shade200,
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
                             ),
-                            child: Image.asset(item.image),
-                          ),
-                          const SizedBox(width: 10),
-                          // Item Details
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _truncateTitle(item.title),
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  '\$${item.price.toStringAsFixed(2)}', // String interpolation for price
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                                ),
-                                // Size Display
-                                Text(
-                                  'Size: ${item.size}', // Display the size
-                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                                ),
-                                // Quantity Control
-                                const SizedBox(height: 10),
-                                Container(
-                                  height: 40,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: const Color.fromARGB(255, 255, 181, 181),
-                                    border: Border.all(color: const Color.fromARGB(255, 255, 181, 181), width: 2),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Item Image
+                            Container(
+                              height: 100,
+                              width: 78,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.grey.shade200,
+                              ),
+                              child: Image.asset(item.image),
+                            ),
+                            const SizedBox(width: 10),
+                            // Item Details
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  
+                                  Text(
+                                        _truncateTitle(item.title),
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                   ),
-                                  child: Row(
+
+                                  const SizedBox(height: 8),
+
+                                  // Size Display
+                                  Row(
                                     children: [
-                                      buildQuantityControl(Icons.remove, index),
-                                      const SizedBox(width: 10),
+
                                       Text(
-                                        '${item.quantity}', // String interpolation for quantity
-                                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                                        '\$${item.price.toStringAsFixed(2)}', // String interpolation for price
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                       ),
+
+                                      // Quantity Control
                                       const SizedBox(width: 10),
-                                      buildQuantityControl(Icons.add, index),
+
+                                      Text(
+                                        'Size: ${item.size}', // Display the size
+                                        style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                      ),
+                                      
                                     ],
                                   ),
-                                ),
-                              ],
+                                  
+                                  const SizedBox(height: 8),
+
+                                  Container(
+                                        height: 40,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          color: const Color.fromARGB(255, 255, 181, 181),
+                                          border: Border.all(color: const Color.fromARGB(255, 255, 181, 181), width: 2),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            buildQuantityControl(Icons.remove, index),
+                                            const SizedBox(width: 10),
+                                            Text(
+                                              '${item.quantity}', // String interpolation for quantity
+                                              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            buildQuantityControl(Icons.add, index),
+                                          ],
+                                        ),
+                                  ),
+
+                                ],
+                              ),
                             ),
-                          ),
-                          // Stagnant Delete Button
-                          IconButton(
-                            onPressed: () {
-                              cartProvider.removeItem(index);
-                            },
-                            icon: const Icon(Icons.delete, color: Colors.red, size: 24),
-                          ),
-                        ],
+                            // Stagnant Delete Button
+                            IconButton(
+                              onPressed: () {
+                                cartProvider.removeItem(index);
+                              },
+                              icon: const Icon(Icons.delete, color: Colors.red, size: 24),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
