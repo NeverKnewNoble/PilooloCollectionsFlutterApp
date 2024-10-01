@@ -3,6 +3,8 @@ import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/components/displays_items.dart';
 import 'widgets/top_navigation_bar.dart';
+import 'package:piloolo/frappe_api_calls/api_service.dart'; // Import the API service
+import 'package:piloolo/frappe_api_calls/ulr_base.dart'; // Import base URL for images
 
 class CategoryGenderPage extends StatefulWidget {
   const CategoryGenderPage({super.key});
@@ -13,6 +15,14 @@ class CategoryGenderPage extends StatefulWidget {
 
 class CategoryGenderPageState extends State<CategoryGenderPage> {
   final String _selectedCategory = 'All';
+  late Future<List<Product>> futureProducts; // Declare the future for products
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize futureProducts to fetch products
+    futureProducts = ApiService().fetchProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,85 +60,43 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                     ),
                     // Add some spacing between the text and grid
                     const SizedBox(height: 20),
-                    // Grid of Products
+                    // Grid of Products fetched from API
                     Expanded(
-                      child: GridView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 16.0,
-                          childAspectRatio: 0.6,
-                        ),
-                        itemCount: 8, // Update item count as necessary
-                        itemBuilder: (context, index) {
-                          switch (index) {
-                            case 0:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/skirtfront.jpeg',
-                                title: 'SHEIN Clasi Floral Print Puff Sleeve Belted Dress',
-                                price: '\$20.00',
-                                imageHeight: 250,
-                              
-                              );
-                            case 1:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/stripedbrown.webp',
-                                title: 'Manfinity Homme Men Striped Print Quarter Zip Polo Shirt',
-                                price: '\$10.99',
-                                imageHeight: 250,
-                              
-                              );
-                            case 2:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/flowfront.jpeg',
-                                title: 'EMERY ROSE Womens Casual Floral Long Sleeve',
-                                price: '\$24.00',
-                                imageHeight: 250,
-                              
-                              );
-                            case 3:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/stripped blue.webp',
-                                title: 'Manfinity Homme Men Striped Print Colorblock Polo Shirt',
-                                price: '\$11.00',
-                                imageHeight: 250,
-                              
-                              );
-                            case 4:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/sweatfront.jpeg',
-                                title: 'SHEIN Essnce Long Sleeve Sweater',
-                                price: '\$32.00',
-                                imageHeight: 250,
-                              
-                              );
-                            case 5:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/jacketfront.jpeg',
-                                title: 'SHEIN WOMANS Stylish Jacket',
-                                price: '\$22.00',
-                                imageHeight: 250,
-                              
-                              );
-                            case 6:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/menblue.jpeg',
-                                title: 'Mens Blue Collar Shirt',
-                                price: '\$22.99',
-                                imageHeight: 250,
-                              
-                              );
-                            case 7:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/mengreen.jpeg',
-                                title: 'Mens Green Collar Shirt',
-                                price: '\$22.99',
-                                imageHeight: 250,
-                              
-                              );
-                            default:
-                              return const SizedBox();
+                      child: FutureBuilder<List<Product>>(
+                        future: futureProducts,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(child: Text('Error: ${snapshot.error}'));
+                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return const Center(child: Text('No products found'));
+                          } else {
+                            // Display the list of products
+                            final products = snapshot.data!;
+                            return GridView.builder(
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(), // Allow grid to scroll independently
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 16.0,
+                                mainAxisSpacing: 16.0,
+                                childAspectRatio: 0.6,
+                              ),
+                              itemCount: products.length, // Use length of fetched products
+                              itemBuilder: (context, index) {
+                                final product = products[index];
+                                final fullImageUrl = product.imagePath.startsWith('http')
+                                    ? product.imagePath
+                                    : '$baseUrl${product.imagePath}';
+
+                                return ProductCard(
+                                  imagePath: fullImageUrl, // Ensure full URL for images
+                                  title: product.title,
+                                  price: '\$${product.price}', // Assuming USD currency
+                                );
+                              },
+                            );
                           }
                         },
                       ),

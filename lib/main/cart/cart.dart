@@ -50,6 +50,7 @@ class CartPageState extends State<CartPage> {
                 itemCount: cartItems.length,
                 itemBuilder: (context, index) {
                   final item = cartItems[index];
+                  // Use item.image as it contains the full URL
                   return GestureDetector(
                     onTap: () {
                       // Navigate to ProductDetailsScreen with the cart item details
@@ -57,7 +58,7 @@ class CartPageState extends State<CartPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProductDetailsScreen(
-                            imagePath: item.image, // Pass the image
+                            imagePath: item.image, // Pass the full image URL
                             title: item.title, // Pass the title
                             price: item.price.toString(), // Convert price to string
                           ),
@@ -91,7 +92,14 @@ class CartPageState extends State<CartPage> {
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.grey.shade200,
                               ),
-                              child: Image.asset(item.image),
+                              child: Image.network(
+                                item.image, // Use item.image as it contains the full URL
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  // Handle image load error
+                                  return const Icon(Icons.broken_image);
+                                },
+                              ),
                             ),
                             const SizedBox(width: 10),
                             // Item Details
@@ -99,58 +107,48 @@ class CartPageState extends State<CartPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  
                                   Text(
-                                        _truncateTitle(item.title),
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    _truncateTitle(item.title),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                   ),
-
                                   const SizedBox(height: 8),
-
                                   // Size Display
                                   Row(
                                     children: [
-
                                       Text(
                                         '\$${item.price.toStringAsFixed(2)}', // String interpolation for price
                                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                       ),
-
-                                      // Quantity Control
                                       const SizedBox(width: 10),
-
                                       Text(
                                         'Size: ${item.size}', // Display the size
                                         style: const TextStyle(fontSize: 14, color: Colors.grey),
                                       ),
-                                      
                                     ],
                                   ),
-                                  
                                   const SizedBox(height: 8),
-
+                                  // Quantity Control
                                   Container(
-                                        height: 40,
-                                        width: 80,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: const Color.fromARGB(255, 255, 181, 181),
-                                          border: Border.all(color: const Color.fromARGB(255, 255, 181, 181), width: 2),
+                                    height: 40,
+                                    width: 80,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: const Color.fromARGB(255, 255, 181, 181),
+                                      border: Border.all(color: const Color.fromARGB(255, 255, 181, 181), width: 2),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        buildQuantityControl(Icons.remove, index),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          '${item.quantity}', // String interpolation for quantity
+                                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                                         ),
-                                        child: Row(
-                                          children: [
-                                            buildQuantityControl(Icons.remove, index),
-                                            const SizedBox(width: 10),
-                                            Text(
-                                              '${item.quantity}', // String interpolation for quantity
-                                              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            buildQuantityControl(Icons.add, index),
-                                          ],
-                                        ),
+                                        const SizedBox(width: 10),
+                                        buildQuantityControl(Icons.add, index),
+                                      ],
+                                    ),
                                   ),
-
                                 ],
                               ),
                             ),

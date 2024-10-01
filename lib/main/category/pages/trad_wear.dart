@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/main/category/widgets/top_navigation_bar.dart';
-import 'package:piloolo/components/displays_items.dart'; // Import the custom top navigation bar
+import 'package:piloolo/components/displays_items.dart'; 
+import 'package:piloolo/frappe_api_calls/african_cloth.dart';
+import 'package:piloolo/frappe_api_calls/ulr_base.dart'; 
+
 
 class TradWearPage extends StatefulWidget {
   const TradWearPage({super.key});
@@ -14,6 +17,14 @@ class TradWearPage extends StatefulWidget {
 class WomenPageState extends State<TradWearPage> {
   final String _selectedCategory = 'All';
 
+  late Future<List<Product>> futureProducts; // Declare the future for products
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize futureProducts to fetch products
+    futureProducts = ApiService().fetchProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,51 +64,46 @@ class WomenPageState extends State<TradWearPage> {
                     const SizedBox(height: 20),
                     // Grid of Products
                     Expanded(
-                      child: GridView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 16.0,
-                          childAspectRatio: 0.6,
-                        ),
-                        itemCount: 4, // Update item count as necessary
-                        itemBuilder: (context, index) {
-                          switch (index) {
-                            case 0:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/Niiblue.jpg',
-                                title: 'SHEIN Clasi Floral Print Puff Sleeve Belted Dress',
-                                price: '\$20.00',
-                                imageHeight: 250,
-                              );
-                            case 1:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/Naablue.jpg',
-                                title: 'EMERY ROSE Womens Casual Floral Long Sleeve',
-                                price: '\$24.00',
-                                imageHeight: 250, 
-                              );
-                            case 2:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/Niikaft.jpg',
-                                title: 'SHEIN Essnce Long Sleeve Sweater',
-                                price: '\$32.00',
-                                imageHeight: 250,
-                              );
-                            case 3:
-                              return const ProductCard(
-                                imagePath: 'images/salesimages/Naagreen.jpg',
-                                title: 'SHEIN WOMANS Stylish Jacket',
-                                price: '\$22.00',
-                                imageHeight: 250, 
-                              );
-                            default:
-                              return const SizedBox();
+                      child: FutureBuilder<List<Product>>(
+                        future: futureProducts,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(child: Text('Error: ${snapshot.error}'));
+                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return const Center(child: Text('No products found'));
+                          } else {
+                            // Display the list of products
+                            final products = snapshot.data!;
+                            return GridView.builder(
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(), // Allow grid to scroll independently
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 16.0,
+                                mainAxisSpacing: 16.0,
+                                childAspectRatio: 0.6,
+                              ),
+                              itemCount: products.length, // Use length of fetched products
+                              itemBuilder: (context, index) {
+                                final product = products[index];
+                                final fullImageUrl = product.imagePath.startsWith('http')
+                                    ? product.imagePath
+                                    : '$baseUrl${product.imagePath}';
+
+                                return ProductCard(
+                                  imagePath: fullImageUrl, // Ensure full URL for images
+                                  title: product.title,
+                                  price: '\$${product.price}', // Assuming USD currency
+                                );
+                              },
+                            );
                           }
                         },
                       ),
                     ),
+                    
                   ],
                 ),
               ),

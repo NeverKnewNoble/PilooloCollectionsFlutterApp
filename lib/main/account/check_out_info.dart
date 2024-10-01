@@ -44,14 +44,15 @@ class _SwitchExampleState extends State<SwitchExample> {
   }
 }
 
-class CheckOutPage extends StatefulWidget {
-  const CheckOutPage({super.key});
+class CheckOutInfoPage extends StatefulWidget {
+  const CheckOutInfoPage({super.key});
+
 
   @override
-  State<CheckOutPage> createState() => _CheckOutPageState();
+  State<CheckOutInfoPage> createState() => _CheckOutInfoPageState();
 }
 
-class _CheckOutPageState extends State<CheckOutPage> {
+class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
   final _formKey = GlobalKey<FormState>();
   String? _selectedCountry = 'Ghana';
   String _phonePrefix = '+233';
@@ -261,35 +262,35 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 ],
               ),
 
-              const SizedBox(height: 32),
+              // const SizedBox(height: 32),
 
-              // Next Button
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Pass the collected data to the PaymentPage
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentPage(
-                          location: _selectedCountry!,
-                          address: _address1Controller.text,
-                          city: _cityController.text,
-                          zipCode: _zipCodeController.text,
-                        ),
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 55),
-                  backgroundColor: Colors.black,
-                ),
-                child: const Text(
-                  'Next',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-              ),
+              // // Next Button
+              // ElevatedButton(
+              //   onPressed: () {
+              //     if (_formKey.currentState!.validate()) {
+              //       // Pass the collected data to the PaymentPage
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) => PaymentPage(
+              //             location: _selectedCountry!,
+              //             address: _address1Controller.text,
+              //             city: _cityController.text,
+              //             zipCode: _zipCodeController.text,
+              //           ),
+              //         ),
+              //       );
+              //     }
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     minimumSize: const Size(double.infinity, 55),
+              //     backgroundColor: Colors.black,
+              //   ),
+              //   child: const Text(
+              //     'Next',
+              //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              //   ),
+              // ),
             ],
           ),
         ),

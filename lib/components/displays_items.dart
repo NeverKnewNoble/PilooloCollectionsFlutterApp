@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:piloolo/components/Product%20Detail/detail.dart'; // Import the details screen
+import 'package:piloolo/components/Product%20Detail/detail.dart';
+import 'package:piloolo/frappe_api_calls/ulr_base.dart'; // Import base URL for images
 
 class ProductCard extends StatelessWidget {
   final String imagePath;
@@ -19,6 +20,9 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Combine baseUrl with imagePath to form the full URL
+    final fullImageUrl = Uri.parse(baseUrl).resolve(imagePath).toString();
+
     return GestureDetector(
       onTap: () {
         // Navigate to ProductDetailsScreen with the product details
@@ -26,7 +30,7 @@ class ProductCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => ProductDetailsScreen(
-              imagePath: imagePath,
+              imagePath: fullImageUrl,
               title: title,
               price: price,
             ),
@@ -45,8 +49,8 @@ class ProductCard extends StatelessWidget {
             Expanded(
               child: SizedBox(
                 width: imageWidth,
-                child: Image.asset(
-                  imagePath,
+                child: Image.network(
+                  fullImageUrl, // Use the full image URL
                   fit: BoxFit.cover,
                 ),
               ),
@@ -69,7 +73,7 @@ class ProductCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        price,
+                        price, // Correctly interpolate the price
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,

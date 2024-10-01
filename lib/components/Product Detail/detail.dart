@@ -48,12 +48,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20), // Rounded corners
                   image: DecorationImage(
-                    image: AssetImage(widget.imagePath), // Display image passed to the details screen
+                    image: NetworkImage(widget.imagePath), // Change to NetworkImage to display network image
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -63,26 +64,37 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   Text(
                     widget.title,
                     style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      // fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  // In-stock text
+                  const Text(
+                    'In Stock',
+                    style: TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold),
+                  ),
+
+                  const SizedBox(height: 8),
 
                   // Size selection
                   const Text(
                     'Size',
                     style: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      // fontWeight: FontWeight.bold,
                     ),
                   ),
+
                   const SizedBox(height: 8),
+
+                  
                   // Size buttons container
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20), // Rounded edges
+                      borderRadius: BorderRadius.circular(5), // Rounded edges
                       border: Border.all(color: Colors.grey.shade300), // Border color
                     ),
                     padding: const EdgeInsets.all(8.0),
@@ -108,19 +120,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     'Quantity',
                     style: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      // fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
                   buildQuantityControl(),
-
-                  const SizedBox(height: 16),
-
-                  // In-stock text
-                  const Text(
-                    'In Stock',
-                    style: TextStyle(fontSize: 20, color: Colors.green),
-                  ),
 
                   const SizedBox(height: 32),
 
@@ -165,9 +169,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 ),
                               );
                             } else {
-                              // Add the item to cart with selected details
+                              // Correctly add full image URL to the cart
                               cartProvider.addItem(CartItem(
-                                image: widget.imagePath, // Use the image passed to the details screen
+                                image: widget.imagePath, // Use full URL image
                                 title: widget.title, // Use the title passed to the details screen
                                 price: double.parse(widget.price.replaceAll('\$', '')),
                                 size: _selectedSize,
@@ -213,13 +217,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   // Build quantity control widget
   Widget buildQuantityControl() {
     return Container(
-      width: 150,
+      width: 90,
       decoration: BoxDecoration(
         color: Colors.white, // Background color for the container
-        borderRadius: BorderRadius.circular(20), // Rounded corners
+        borderRadius: BorderRadius.circular(10), // Rounded corners
         border: Border.all(color: Colors.grey.shade300), // Optional border color
       ),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10), // Padding inside the container
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8), // Padding inside the container
       child: Row(
         children: [
           GestureDetector(
@@ -272,7 +276,7 @@ class _SizeButton extends StatelessWidget {
         backgroundColor: isSelected ? Colors.red : const Color.fromARGB(255, 255, 181, 181), // Change color based on selection
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30), // Rounded corners
+          borderRadius: BorderRadius.circular(5), // Rounded corners
         ),
       ),
       child: Text(
