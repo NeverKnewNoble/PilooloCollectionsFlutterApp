@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
-import 'package:piloolo/main/cart/widget/success_animation.dart'; // Import the animation
+import 'package:piloolo/main/cart/widget/success_animation.dart'; 
+import 'package:piloolo/components/currency.dart';
 
 class PaymentPage extends StatefulWidget {
   final String location;
@@ -49,7 +50,6 @@ class _PaymentPageState extends State<PaymentPage> {
         },
       );
     }
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -244,7 +244,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
               ),
               Text(
-                '\$${subtotal.toStringAsFixed(2)}',
+                '$currencySign${subtotal.toStringAsFixed(2)}', // Use currencySign
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ],
@@ -260,7 +260,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
               ),
               Text(
-                '\$${shippingFee.toStringAsFixed(2)}',
+                '$currencySign${shippingFee.toStringAsFixed(2)}', // Use currencySign
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ],
@@ -276,7 +276,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
               ),
               Text(
-                '\$${vatAmount.toStringAsFixed(2)}',
+                '$currencySign${vatAmount.toStringAsFixed(2)}', // Use currencySign
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ],
@@ -292,7 +292,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               Text(
-                '\$${total.toStringAsFixed(2)}',
+                '$currencySign${total.toStringAsFixed(2)}', // Use currencySign
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ],
@@ -312,7 +312,7 @@ class _PaymentPageState extends State<PaymentPage> {
               });
             },
             child: Text(
-              "Submit Order (\$${total.toStringAsFixed(2)})",
+              "Submit Order ($currencySign${total.toStringAsFixed(2)})", // Use currencySign
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
             ),
           ),

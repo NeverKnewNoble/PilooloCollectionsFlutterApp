@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piloolo/components/currency.dart';
 import 'package:piloolo/main/category/category_gender_page.dart'; // Default page
 import 'package:piloolo/main/category/pages/men_page.dart'; // Men page
 import 'package:piloolo/main/category/pages/trad_wear.dart';
@@ -19,7 +20,7 @@ class TopNavigationBarState extends State<TopNavigationBar> {
   Widget page;
   switch (index) {
     case 0:
-      page = const CategoryGenderPage();
+      page = CategoryGenderPage(currencySign: currencySign);
       break;
     case 1:
       page = const MenPage();
@@ -31,7 +32,7 @@ class TopNavigationBarState extends State<TopNavigationBar> {
       page = const TradWearPage();
       break;
     default:
-      page = const CategoryGenderPage();
+      page = CategoryGenderPage(currencySign: currencySign);
   }
 
   // Push the new page with a slide transition

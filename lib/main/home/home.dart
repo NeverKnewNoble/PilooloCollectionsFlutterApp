@@ -1,12 +1,12 @@
-// home.dart
 import 'package:flutter/material.dart';
 import 'package:piloolo/main/home/widgets/category_items.dart';
 import 'package:piloolo/components/displays_items.dart';
 import 'package:piloolo/main/home/widgets/image_slider.dart';
 import 'package:piloolo/main/home/widgets/search_bar.dart';
-import 'package:piloolo/components/pagebar.dart'; 
+import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
-import 'package:piloolo/frappe_api_calls/api_service.dart'; // Import the API service
+import 'package:piloolo/frappe_api_calls/api_service.dart'; 
+import 'package:piloolo/components/currency.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,8 +36,34 @@ class HomePageState extends State<HomePage> {
           elevation: 0,
           automaticallyImplyLeading: false, // Removes the back arrow
 
-           actions: const [
-            ShoppingCartAction(), // Use the shopping cart action from the new file
+          actions: [
+            // Currency Dropdown
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: DropdownButton<String>(
+                value: currency, // Use global currency variable
+                icon: const Icon(Icons.arrow_drop_down),
+                iconSize: 24,
+                underline: Container(), // Hide the underline
+                onChanged: (String? newCurrency) {
+                  setState(() {
+                    // Update the global currency and sign based on selection
+                    currency = newCurrency!;
+                    currencySign = getCurrencySign(newCurrency);
+                  });
+                },
+                items: currencies.map<DropdownMenuItem<String>>((String currencyOption) {
+                  return DropdownMenuItem<String>(
+                    value: currencyOption,
+                    child: Text(
+                      currencyOption,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            const ShoppingCartAction(), // Use the shopping cart action from the new file
           ],
         ),
         body: SingleChildScrollView(
@@ -156,7 +182,7 @@ class HomePageState extends State<HomePage> {
                           return ProductCard(
                             imagePath: product.imagePath,
                             title: product.title,
-                            price: '\$${product.price}', // Assuming USD currency
+                            price: '$currencySign${product.price}', // Use global currencySign
                           );
                         },
                       );

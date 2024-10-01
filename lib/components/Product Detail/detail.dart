@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
+import 'package:piloolo/components/currency.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final String imagePath;
@@ -65,7 +66,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     widget.title,
                     style: const TextStyle(
                       fontSize: 18,
-                      // fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -83,13 +83,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     'Size',
                     style: TextStyle(
                       fontSize: 18,
-                      // fontWeight: FontWeight.bold,
                     ),
                   ),
 
                   const SizedBox(height: 8),
 
-                  
                   // Size buttons container
                   Container(
                     decoration: BoxDecoration(
@@ -120,7 +118,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     'Quantity',
                     style: TextStyle(
                       fontSize: 18,
-                      // fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -147,7 +144,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          widget.price, // Use the price passed to the details screen
+                          '$currencySign${widget.price}', // Use the dynamic currency sign
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -173,7 +170,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               cartProvider.addItem(CartItem(
                                 image: widget.imagePath, // Use full URL image
                                 title: widget.title, // Use the title passed to the details screen
-                                price: double.parse(widget.price.replaceAll('\$', '')),
+                                price: double.parse(
+                                  widget.price.replaceAll(RegExp(r'[^\d.]'), ''), // Remove any non-numeric characters before parsing
+                                ),
                                 size: _selectedSize,
                                 quantity: quantity,
                               ));

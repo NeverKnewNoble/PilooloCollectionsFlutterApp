@@ -3,11 +3,14 @@ import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/components/displays_items.dart';
 import 'widgets/top_navigation_bar.dart';
-import 'package:piloolo/frappe_api_calls/api_service.dart'; // Import the API service
-import 'package:piloolo/frappe_api_calls/ulr_base.dart'; // Import base URL for images
+import 'package:piloolo/frappe_api_calls/api_service.dart'; 
+import 'package:piloolo/frappe_api_calls/ulr_base.dart';
+import 'package:piloolo/components/currency.dart';
 
 class CategoryGenderPage extends StatefulWidget {
-  const CategoryGenderPage({super.key});
+  final String currencySign; 
+
+  const CategoryGenderPage({super.key, required this.currencySign});
 
   @override
   CategoryGenderPageState createState() => CategoryGenderPageState();
@@ -93,7 +96,7 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                                 return ProductCard(
                                   imagePath: fullImageUrl, // Ensure full URL for images
                                   title: product.title,
-                                  price: '\$${product.price}', // Assuming USD currency
+                                  price: '$currencySign${product.price}',
                                 );
                               },
                             );

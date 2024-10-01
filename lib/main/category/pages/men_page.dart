@@ -6,6 +6,7 @@ import 'package:piloolo/main/category/widgets/top_navigation_bar.dart';
 import 'package:piloolo/components/displays_items.dart'; 
 import 'package:piloolo/frappe_api_calls/all_men_cloth.dart';
 import 'package:piloolo/frappe_api_calls/ulr_base.dart'; 
+import 'package:piloolo/components/currency.dart';
 
 class MenPage extends StatefulWidget {
   const MenPage({super.key});
@@ -115,7 +116,7 @@ class MenPageState extends State<MenPage> {
                                 return ProductCard(
                                   imagePath: fullImageUrl, // Ensure full URL for images
                                   title: product.title,
-                                  price: '\$${product.price}', // Assuming USD currency
+                                  price: '$currencySign${product.price}',
                                 );
                               },
                             );

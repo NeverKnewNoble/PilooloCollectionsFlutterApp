@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piloolo/components/currency.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
 import 'package:piloolo/main/category/category_gender_page.dart';
 import 'package:piloolo/main/home/home.dart';
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
       // ],
       title: 'Piloolo',
       debugShowCheckedModeBanner: false,
-      home: const CategoryGenderPage(), // Ensure this page is under the provider's scope
+      home: CategoryGenderPage(currencySign: currencySign),
        routes: {
         'HomePage': (context) => const HomePage(), // Define the route for the HomePage
         // Add other routes if necessary

@@ -3,7 +3,8 @@ import 'package:piloolo/main/cart/check_out.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/components/pagebar.dart';
-import 'package:piloolo/components/Product%20Detail/detail.dart'; // Import detail page
+import 'package:piloolo/components/Product%20Detail/detail.dart'; 
+import 'package:piloolo/components/currency.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -116,7 +117,7 @@ class CartPageState extends State<CartPage> {
                                   Row(
                                     children: [
                                       Text(
-                                        '\$${item.price.toStringAsFixed(2)}', // String interpolation for price
+                                        '$currencySign${item.price.toStringAsFixed(2)}', // Use currencySign
                                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                       ),
                                       const SizedBox(width: 10),
@@ -214,7 +215,7 @@ class CartPageState extends State<CartPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
               ),
               Text(
-                '\$${cartProvider.totalPrice().toStringAsFixed(2)}', // 2 decimal places for subtotal
+                '$currencySign${cartProvider.totalPrice().toStringAsFixed(2)}', // Use currencySign
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ],
@@ -231,7 +232,7 @@ class CartPageState extends State<CartPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               Text(
-                '\$${cartProvider.totalPrice().toStringAsFixed(2)}', // 2 decimal places for total
+                '$currencySign${cartProvider.totalPrice().toStringAsFixed(2)}', // Use currencySign
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ],
