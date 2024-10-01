@@ -47,7 +47,7 @@ class MainScaffoldState extends State<MainScaffold> {
         page = const HomePage();
         break;
       case 1:
-        page = CategoryGenderPage(currencySign: currencySign);
+        page = const CategoryGenderPage();
         break;
       case 2:
         page = const CartPage();

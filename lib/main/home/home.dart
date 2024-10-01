@@ -6,7 +6,7 @@ import 'package:piloolo/main/home/widgets/search_bar.dart';
 import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/frappe_api_calls/api_service.dart'; 
-import 'package:piloolo/components/currency.dart';
+import 'package:piloolo/components/currency.dart'; 
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,6 +23,11 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     futureProducts = ApiService().fetchProducts();
+  }
+
+  Future<String> _convertPrice(double priceInUSD) async {
+    // Call the function to get the converted price based on the selected currency
+    return await calculatePrice(priceInUSD, currency);
   }
 
   @override
@@ -179,10 +184,24 @@ class HomePageState extends State<HomePage> {
                         itemCount: products.length, // Use length of fetched products
                         itemBuilder: (context, index) {
                           final product = products[index];
-                          return ProductCard(
-                            imagePath: product.imagePath,
-                            title: product.title,
-                            price: '$currencySign${product.price}', // Use global currencySign
+                          final priceInDouble = double.tryParse(product.price.toString()) ?? 0.0; // Convert price to double
+
+                          return FutureBuilder<String>(
+                            future: _convertPrice(priceInDouble), // Convert the price
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const CircularProgressIndicator(); // Show loading
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                // Display product details with converted price
+                                return ProductCard(
+                                  imagePath: product.imagePath,
+                                  title: product.title,
+                                  price: '$currencySign${snapshot.data}', // Use converted price
+                                );
+                              }
+                            },
                           );
                         },
                       );

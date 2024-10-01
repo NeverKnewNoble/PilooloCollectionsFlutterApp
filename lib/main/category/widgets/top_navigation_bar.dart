@@ -20,7 +20,8 @@ class TopNavigationBarState extends State<TopNavigationBar> {
   Widget page;
   switch (index) {
     case 0:
-      page = CategoryGenderPage(currencySign: currencySign);
+      page = const CategoryGenderPage();
+
       break;
     case 1:
       page = const MenPage();
@@ -32,7 +33,8 @@ class TopNavigationBarState extends State<TopNavigationBar> {
       page = const TradWearPage();
       break;
     default:
-      page = CategoryGenderPage(currencySign: currencySign);
+      page = const CategoryGenderPage();
+
   }
 
   // Push the new page with a slide transition

@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       // ],
       title: 'Piloolo',
       debugShowCheckedModeBanner: false,
-      home: CategoryGenderPage(currencySign: currencySign),
+      home: const CategoryGenderPage(),
        routes: {
         'HomePage': (context) => const HomePage(), // Define the route for the HomePage
         // Add other routes if necessary

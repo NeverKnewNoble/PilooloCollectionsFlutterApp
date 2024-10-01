@@ -24,6 +24,10 @@ class WomenPageState extends State<WomenPage> {
     });
   }
 
+  Future<String> _convertPrice(double priceInUSD) async {
+  return await calculatePrice(priceInUSD, currency);
+  }
+
   late Future<List<Product>> futureProducts; // Declare the future for products
 
   @override
@@ -111,14 +115,27 @@ class WomenPageState extends State<WomenPage> {
                               itemCount: products.length, // Use length of fetched products
                               itemBuilder: (context, index) {
                                 final product = products[index];
+                                final priceInDouble = double.tryParse(product.price.toString()) ?? 0.0; // Convert price to double
                                 final fullImageUrl = product.imagePath.startsWith('http')
                                     ? product.imagePath
                                     : '$baseUrl${product.imagePath}';
 
-                                return ProductCard(
-                                  imagePath: fullImageUrl, // Ensure full URL for images
-                                  title: product.title,
-                                  price: '$currencySign${product.price}',
+                                // Use FutureBuilder to get converted price
+                                return FutureBuilder<String>(
+                                  future: _convertPrice(priceInDouble),
+                                  builder: (context, priceSnapshot) {
+                                    if (priceSnapshot.connectionState == ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (priceSnapshot.hasError) {
+                                      return Text('Error: ${priceSnapshot.error}');
+                                    } else {
+                                      return ProductCard(
+                                        imagePath: fullImageUrl, // Ensure full URL for images
+                                        title: product.title,
+                                        price: '$currencySign${priceSnapshot.data}', // Use converted price
+                                      );
+                                    }
+                                  },
                                 );
                               },
                             );

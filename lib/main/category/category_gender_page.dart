@@ -8,9 +8,7 @@ import 'package:piloolo/frappe_api_calls/ulr_base.dart';
 import 'package:piloolo/components/currency.dart';
 
 class CategoryGenderPage extends StatefulWidget {
-  final String currencySign; 
-
-  const CategoryGenderPage({super.key, required this.currencySign});
+  const CategoryGenderPage({super.key});
 
   @override
   CategoryGenderPageState createState() => CategoryGenderPageState();
@@ -25,6 +23,10 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
     super.initState();
     // Initialize futureProducts to fetch products
     futureProducts = ApiService().fetchProducts();
+  }
+
+  Future<String> _convertPrice(double priceInUSD) async {
+    return await calculatePrice(priceInUSD, currency);
   }
 
   @override
@@ -61,9 +63,7 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                         color: Color.fromARGB(255, 255, 147, 147),
                       ),
                     ),
-                    // Add some spacing between the text and grid
                     const SizedBox(height: 20),
-                    // Grid of Products fetched from API
                     Expanded(
                       child: FutureBuilder<List<Product>>(
                         future: futureProducts,
@@ -75,7 +75,6 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return const Center(child: Text('No products found'));
                           } else {
-                            // Display the list of products
                             final products = snapshot.data!;
                             return GridView.builder(
                               shrinkWrap: true,
@@ -86,17 +85,28 @@ class CategoryGenderPageState extends State<CategoryGenderPage> {
                                 mainAxisSpacing: 16.0,
                                 childAspectRatio: 0.6,
                               ),
-                              itemCount: products.length, // Use length of fetched products
+                              itemCount: products.length,
                               itemBuilder: (context, index) {
                                 final product = products[index];
-                                final fullImageUrl = product.imagePath.startsWith('http')
-                                    ? product.imagePath
-                                    : '$baseUrl${product.imagePath}';
+                                final priceInDouble = double.tryParse(product.price.toString()) ?? 0.0;
 
-                                return ProductCard(
-                                  imagePath: fullImageUrl, // Ensure full URL for images
-                                  title: product.title,
-                                  price: '$currencySign${product.price}',
+                                return FutureBuilder<String>(
+                                  future: _convertPrice(priceInDouble),
+                                  builder: (context, priceSnapshot) {
+                                    if (priceSnapshot.connectionState == ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (priceSnapshot.hasError) {
+                                      return Text('Error: ${priceSnapshot.error}');
+                                    } else {
+                                      return ProductCard(
+                                        imagePath: product.imagePath.startsWith('http')
+                                            ? product.imagePath
+                                            : '$baseUrl${product.imagePath}',
+                                        title: product.title,
+                                        price: '$currencySign${priceSnapshot.data}',
+                                      );
+                                    }
+                                  },
                                 );
                               },
                             );
