@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
-import 'package:piloolo/components/currency.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final String imagePath;
@@ -144,7 +143,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '$currencySign${widget.price}', // Use the dynamic currency sign
+                          widget.price, // Use the dynamic currency sign
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,

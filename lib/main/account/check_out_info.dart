@@ -1,51 +1,8 @@
 import 'package:flutter/material.dart';
-
-// SwitchExample Widget code added directly here for integration
-class SwitchExample extends StatefulWidget {
-  const SwitchExample({super.key});
-
-  @override
-  State<SwitchExample> createState() => _SwitchExampleState();
-}
-
-class _SwitchExampleState extends State<SwitchExample> {
-  bool light0 = true;
-  bool light1 = true;
-
-  final MaterialStateProperty<Icon?> thumbIcon =
-      MaterialStateProperty.resolveWith<Icon?>(
-    (Set<MaterialState> states) {
-      if (states.contains(MaterialState.selected)) {
-        return const Icon(Icons.check);
-      }
-      return const Icon(Icons.close);
-    },
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Switch(
-          thumbIcon: thumbIcon,
-          value: light1,
-          activeColor: Colors.green, 
-          activeTrackColor: Colors.lightGreen, 
-          onChanged: (bool value) {
-            setState(() {
-              light1 = value;
-            });
-          },
-        ),
-      ],
-    );
-  }
-}
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckOutInfoPage extends StatefulWidget {
   const CheckOutInfoPage({super.key});
-
 
   @override
   State<CheckOutInfoPage> createState() => _CheckOutInfoPageState();
@@ -62,6 +19,7 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
   final TextEditingController _zipCodeController = TextEditingController();
   final TextEditingController _address1Controller = TextEditingController();
   final TextEditingController _address2Controller = TextEditingController();
+  final TextEditingController _stateProvinceController = TextEditingController();
 
   // Countries and their respective phone prefixes
   final Map<String, String> _countryPhonePrefixes = {
@@ -70,6 +28,97 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
     'UK': '+44',
     'Canada': '+1',
   };
+
+  @override
+  void initState() {
+    super.initState();
+    loadLocalData(); // Load saved data when initializing the page
+  }
+
+  // Load data from local storage
+  Future<void> loadLocalData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (mounted) {
+      setState(() {
+        _selectedCountry = prefs.getString('location') ?? 'Ghana';
+        _phonePrefix = _countryPhonePrefixes[_selectedCountry!]!;
+        _firstNameController.text = prefs.getString('first_name') ?? '';
+        _lastNameController.text = prefs.getString('last_name') ?? '';
+        _phoneController.text = prefs.getString('phone_number')?.replaceFirst(_phonePrefix, '') ?? '';
+        _cityController.text = prefs.getString('city') ?? '';
+        _stateProvinceController.text = prefs.getString('stateprovidence_optional') ?? '';
+        _zipCodeController.text = prefs.getString('postzip_code') ?? '';
+        _address1Controller.text = prefs.getString('address_line_1') ?? '';
+        _address2Controller.text = prefs.getString('address_line_2_optional') ?? '';
+      });
+    }
+  }
+
+  // Save data locally in the app
+  Future<void> saveLocalData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString('location', _selectedCountry!);
+    await prefs.setString('first_name', _firstNameController.text);
+    await prefs.setString('last_name', _lastNameController.text);
+    await prefs.setString('phone_number', '$_phonePrefix${_phoneController.text}');
+    await prefs.setString('city', _cityController.text);
+    await prefs.setString('stateprovidence_optional', _stateProvinceController.text);
+    await prefs.setString('postzip_code', _zipCodeController.text);
+    await prefs.setString('address_line_1', _address1Controller.text);
+    await prefs.setString('address_line_2_optional', _address2Controller.text);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data saved')),
+      );
+    }
+  }
+
+  // // Submit data to Frappe server
+  // Future<void> submitFormData() async {
+  //   // Prepare the data for submission
+  //   Map<String, dynamic> data = {
+  //     'location': _selectedCountry,
+  //     'first_name': _firstNameController.text,
+  //     'last_name': _lastNameController.text,
+  //     'phone_number': '$_phonePrefix${_phoneController.text}',
+  //     'city': _cityController.text,
+  //     'stateprovidence_optional': _stateProvinceController.text,
+  //     'postzip_code': _zipCodeController.text,
+  //     'address_line_1': _address1Controller.text,
+  //     'address_line_2_optional': _address2Controller.text,
+  //   };
+
+  //   try {
+  //     // Check if it's a new document or updating an existing one
+  //     if (isNewDocument()) {
+  //       await createUserAddressInfo(data);
+  //     } else {
+  //       String docName = 'existing-document-name'; // Update this as needed
+  //       await updateUserAddressInfo(docName, data);
+  //     }
+
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Data saved successfully')),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Failed to save data: $e')),
+  //       );
+  //     }
+  //   }
+  // }
+
+  bool isNewDocument() {
+    // Replace this logic with how you determine if the document is new or existing
+    return true; // Return true for new documents
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +140,7 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
           child: ListView(
             children: [
               const SizedBox(height: 4),
-              // Country Dropdown
+              // Location Dropdown
               DropdownButtonFormField<String>(
                 value: _selectedCountry,
                 items: _countryPhonePrefixes.keys.map((String country) {
@@ -112,7 +161,6 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
                 },
               ),
               const SizedBox(height: 16),
-
               // First Name
               TextFormField(
                 controller: _firstNameController,
@@ -128,7 +176,6 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
                 },
               ),
               const SizedBox(height: 16),
-
               // Last Name
               TextFormField(
                 controller: _lastNameController,
@@ -144,8 +191,7 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
                 },
               ),
               const SizedBox(height: 16),
-
-              // Phone Number with Prefix
+              // Phone Number
               Row(
                 children: [
                   Container(
@@ -175,8 +221,7 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 32),
-
+              const SizedBox(height: 16),
               // City
               TextFormField(
                 controller: _cityController,
@@ -192,16 +237,15 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
                 },
               ),
               const SizedBox(height: 16),
-
               // State/Province (Optional)
               TextFormField(
+                controller: _stateProvinceController,
                 decoration: const InputDecoration(
                   labelText: 'State/Province (Optional)',
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
-
               // Post/Zip Code
               TextFormField(
                 controller: _zipCodeController,
@@ -217,7 +261,6 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
                 },
               ),
               const SizedBox(height: 16),
-
               // Address Line 1
               TextFormField(
                 controller: _address1Controller,
@@ -233,7 +276,6 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
                 },
               ),
               const SizedBox(height: 16),
-
               // Address Line 2 (Optional)
               TextFormField(
                 controller: _address2Controller,
@@ -242,51 +284,37 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-
               const SizedBox(height: 16),
-
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center, // Center contents in the row
-                children: [
-                  SizedBox(width: 15), // Adjust spacing as necessary
-
-                  Text(
-                    'Save your Information',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-
-                  SizedBox(width: 15), // Adjust spacing between text and switch
-
-                  SwitchExample(),
-                ],
+              // Save Button
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    saveLocalData(); // Save data locally in the app
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 55),
+                  backgroundColor: Colors.black,
+                ),
+                child: const Text(
+                  'Save',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
               ),
-
-              // const SizedBox(height: 32),
-
-              // // Next Button
+              // const SizedBox(height: 16),
+              // // Submit Button
               // ElevatedButton(
               //   onPressed: () {
               //     if (_formKey.currentState!.validate()) {
-              //       // Pass the collected data to the PaymentPage
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) => PaymentPage(
-              //             location: _selectedCountry!,
-              //             address: _address1Controller.text,
-              //             city: _cityController.text,
-              //             zipCode: _zipCodeController.text,
-              //           ),
-              //         ),
-              //       );
+              //       submitFormData(); // Submit data to Frappe backend
               //     }
               //   },
               //   style: ElevatedButton.styleFrom(
               //     minimumSize: const Size(double.infinity, 55),
-              //     backgroundColor: Colors.black,
+              //     backgroundColor: Colors.green,
               //   ),
               //   child: const Text(
-              //     'Next',
+              //     'Submit',
               //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
               //   ),
               // ),

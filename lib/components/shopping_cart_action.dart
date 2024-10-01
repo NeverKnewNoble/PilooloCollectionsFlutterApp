@@ -28,7 +28,7 @@ class ShoppingCartAction extends StatelessWidget {
               backgroundColor: Colors.transparent,
               padding: EdgeInsets.zero, // Remove padding
               elevation: 0, // Removes the elevation (shadow/border)
-              minimumSize: const Size(40, 30), // Set minimum size for the button
+              minimumSize: const Size(50, 50), // Set minimum size for the button
             ),
             child: const Icon(
               Icons.add_shopping_cart,

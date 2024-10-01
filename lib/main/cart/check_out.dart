@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piloolo/main/cart/payment.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // SwitchExample Widget code added directly here for integration
 class SwitchExample extends StatefulWidget {
@@ -72,6 +73,48 @@ class _CheckOutPageState extends State<CheckOutPage> {
   };
 
   @override
+  void initState() {
+    super.initState();
+    loadLocalData();
+  }
+
+  // Load data from local storage
+  Future<void> loadLocalData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (mounted) {
+      setState(() {
+        _selectedCountry = prefs.getString('location') ?? 'Ghana';
+        _phonePrefix = _countryPhonePrefixes[_selectedCountry!]!;
+        _firstNameController.text = prefs.getString('first_name') ?? '';
+        _lastNameController.text = prefs.getString('last_name') ?? '';
+        _phoneController.text = prefs.getString('phone_number')?.replaceFirst(_phonePrefix, '') ?? '';
+        _cityController.text = prefs.getString('city') ?? '';
+        _zipCodeController.text = prefs.getString('postzip_code') ?? '';
+        _address1Controller.text = prefs.getString('address_line_1') ?? '';
+        _address2Controller.text = prefs.getString('address_line_2_optional') ?? '';
+      });
+    }
+  }
+
+  // Show warning message if trying to edit fields
+  void _showEditWarning() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please go to Account Information to change your details.')),
+    );
+  }
+
+  // Check if any field is empty before navigating to next page
+  bool areFieldsEmpty() {
+    return _firstNameController.text.isEmpty ||
+        _lastNameController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _cityController.text.isEmpty ||
+        _zipCodeController.text.isEmpty ||
+        _address1Controller.text.isEmpty;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -91,7 +134,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
           child: ListView(
             children: [
               const SizedBox(height: 4),
-              // Country Dropdown
+              // Country Dropdown (read-only)
               DropdownButtonFormField<String>(
                 value: _selectedCountry,
                 items: _countryPhonePrefixes.keys.map((String country) {
@@ -104,48 +147,35 @@ class _CheckOutPageState extends State<CheckOutPage> {
                   labelText: 'Location',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedCountry = newValue;
-                    _phonePrefix = _countryPhonePrefixes[newValue!]!;
-                  });
-                },
+                onChanged: null, // Disable dropdown
               ),
               const SizedBox(height: 16),
 
-              // First Name
+              // First Name (read-only)
               TextFormField(
                 controller: _firstNameController,
+                readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'First Name',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your first name';
-                  }
-                  return null;
-                },
+                onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
 
-              // Last Name
+              // Last Name (read-only)
               TextFormField(
                 controller: _lastNameController,
+                readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'Last Name',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your last name';
-                  }
-                  return null;
-                },
+                onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
 
-              // Phone Number with Prefix
+              // Phone Number with Prefix (read-only)
               Row(
                 children: [
                   Container(
@@ -160,103 +190,86 @@ class _CheckOutPageState extends State<CheckOutPage> {
                   Expanded(
                     child: TextFormField(
                       controller: _phoneController,
+                      readOnly: true,
                       decoration: const InputDecoration(
                         labelText: 'Phone Number',
                         border: OutlineInputBorder(),
                       ),
-                      keyboardType: TextInputType.phone,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your phone number';
-                        }
-                        return null;
-                      },
+                      onTap: _showEditWarning,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 32),
 
-              // City
+              // City (read-only)
               TextFormField(
                 controller: _cityController,
+                readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'City',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your city';
-                  }
-                  return null;
-                },
+                onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
 
-              // State/Province (Optional)
+              // State/Province (Optional) (read-only)
               TextFormField(
+                readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'State/Province (Optional)',
                   border: OutlineInputBorder(),
                 ),
+                onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
 
-              // Post/Zip Code
+              // Post/Zip Code (read-only)
               TextFormField(
                 controller: _zipCodeController,
+                readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'Post/Zip Code',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your post/zip code';
-                  }
-                  return null;
-                },
+                onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
 
-              // Address Line 1
+              // Address Line 1 (read-only)
               TextFormField(
                 controller: _address1Controller,
+                readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'Address Line 1',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your address';
-                  }
-                  return null;
-                },
+                onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
 
-              // Address Line 2 (Optional)
+              // Address Line 2 (Optional) (read-only)
               TextFormField(
                 controller: _address2Controller,
+                readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'Address Line 2 (Optional)',
                   border: OutlineInputBorder(),
                 ),
+                onTap: _showEditWarning,
               ),
-
               const SizedBox(height: 16),
 
               const Row(
-                mainAxisAlignment: MainAxisAlignment.center, // Center contents in the row
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 15), // Adjust spacing as necessary
-
+                  SizedBox(width: 15),
                   Text(
                     'Save your Information',
                     style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-
-                  SizedBox(width: 15), // Adjust spacing between text and switch
-
+                  SizedBox(width: 15),
                   SwitchExample(),
                 ],
               ),
@@ -266,8 +279,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
               // Next Button
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Pass the collected data to the PaymentPage
+                  if (_formKey.currentState!.validate() && !areFieldsEmpty()) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -278,6 +290,10 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           zipCode: _zipCodeController.text,
                         ),
                       ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please fill in all fields before proceeding.')),
                     );
                   }
                 },
