@@ -52,7 +52,7 @@ class _PaymentPageState extends State<PaymentPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -60,130 +60,178 @@ class _PaymentPageState extends State<PaymentPage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Page Title
               const Text(
                 'Payment Methods',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black),
               ),
               const SizedBox(height: 20),
 
               // Card Option
-              RadioListTile<bool>(
-                value: true,
-                groupValue: _payWithCard,
-                onChanged: (value) {
+              buildPaymentOption(
+                title: 'Pay with Card',
+                isSelected: _payWithCard,
+                onTap: () {
                   setState(() {
-                    _payWithCard = value!;
-                    _payWithMoMo = false; // Deselect MoMo option
+                    _payWithCard = true;
+                    _payWithMoMo = false;
                   });
                 },
-                title: const Text('Card'),
-                activeColor: Colors.red,
+                icon: Icons.credit_card,
               ),
 
               // Card Details Form (only if card option is selected)
-              if (_payWithCard) ...[
-                const SizedBox(height: 10),
-                // Card Number
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Card Number',
-                    prefixIcon: Icon(Icons.credit_card),
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 10),
-
-                // Expiry Date and CVV
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Expiry Date',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.datetime,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'CVV',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              if (_payWithCard) buildCardDetailsForm(),
 
               const SizedBox(height: 10),
 
               // Paystack (MoMo) Option
-              RadioListTile<bool>(
-                value: true,
-                groupValue: _payWithMoMo,
-                onChanged: (value) {
+              buildPaymentOption(
+                title: 'Paystack (MoMo)',
+                isSelected: _payWithMoMo,
+                onTap: () {
                   setState(() {
-                    _payWithMoMo = value!;
-                    _payWithCard = false; // Deselect Card option
+                    _payWithMoMo = true;
+                    _payWithCard = false;
                   });
                 },
-                title: const Text('Paystack (MoMo)'),
-                activeColor: Colors.red,
+                icon: Icons.mobile_friendly,
               ),
 
               if (_payWithMoMo)
-                ElevatedButton(
-                  onPressed: () {
-                    // Paystack MoMo logic here
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset(
-                        'images/paystack.png',
-                        width: 40,
-                        height: 40,
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(
-                        'Continue with Paystack',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                buildPaystackButton(),
 
-              const SizedBox(height: 60),
+              const SizedBox(height: 20),
 
               // Display Checkout Info Section
               buildCheckoutInfoSection(),
 
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
 
               // Checkout Box with Shipping Fee, VAT, and Submit Order button
               buildCheckOutBox(cartProvider),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // Payment Option Selector
+  Widget buildPaymentOption({
+    required String title,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required IconData icon,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.red[50] : Colors.white,
+          border: Border.all(color: isSelected ? Colors.red : Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: isSelected ? Colors.red : Colors.black, size: 30),
+            const SizedBox(width: 16),
+            Text(
+              title,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isSelected ? Colors.red : Colors.black),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Card Details Form Widget
+  Widget buildCardDetailsForm() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Column(
+        children: [
+          // Card Number
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Card Number',
+              prefixIcon: Icon(Icons.credit_card),
+              border: OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: 10),
+
+          // Expiry Date and CVV
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Expiry Date',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.datetime,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'CVV',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Paystack Button for MoMo Payment
+  Widget buildPaystackButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: ElevatedButton(
+        onPressed: () {
+          // Paystack MoMo logic here
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          elevation: 2,
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.0),
+            side: BorderSide(color: Colors.grey.shade300),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              'images/paystack.png',
+              width: 35,
+              height: 35,
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Continue with Paystack',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -204,13 +252,13 @@ class _PaymentPageState extends State<PaymentPage> {
         children: [
           const Text(
             'Shipping Address:',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
           ),
           const SizedBox(height: 10),
-          Text('Location: ${widget.location}'),
-          Text('Address: ${widget.address}'),
-          Text('City: ${widget.city}'),
-          Text('Zip Code: ${widget.zipCode}'),
+          Text('Location: ${widget.location}', style: const TextStyle(fontSize: 16)),
+          Text('Address: ${widget.address}', style: const TextStyle(fontSize: 16)),
+          Text('City: ${widget.city}', style: const TextStyle(fontSize: 16)),
+          Text('Zip Code: ${widget.zipCode}', style: const TextStyle(fontSize: 16)),
         ],
       ),
     );
@@ -223,87 +271,33 @@ class _PaymentPageState extends State<PaymentPage> {
     final total = subtotal + shippingFee + vatAmount;
 
     return Container(
-      height: 250,
       width: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(30),
-          bottomLeft: Radius.circular(30),
-        ),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [BoxShadow(color: Colors.grey.shade200, blurRadius: 10, offset: const Offset(0, 3))],
       ),
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          // Subtotal
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Subtotal",
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
-              ),
-              Text(
-                '$currencySign${subtotal.toStringAsFixed(2)}', // Use currencySign
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            ],
-          ),
+          buildSummaryRow("Subtotal", subtotal),
           const SizedBox(height: 10),
-
-          // Shipping Fee
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Shipping Fee",
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
-              ),
-              Text(
-                '$currencySign${shippingFee.toStringAsFixed(2)}', // Use currencySign
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            ],
-          ),
+          buildSummaryRow("Shipping Fee", shippingFee),
           const SizedBox(height: 10),
-
-          // VAT
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "VAT",
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
-              ),
-              Text(
-                '$currencySign${vatAmount.toStringAsFixed(2)}', // Use currencySign
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-
-          // Total with VAT
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Order Total (VAT Included)",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              Text(
-                '$currencySign${total.toStringAsFixed(2)}', // Use currencySign
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-            ],
-          ),
+          buildSummaryRow("VAT", vatAmount),
+          const Divider(height: 30, thickness: 1),
+          buildSummaryRow("Order Total (VAT Included)", total, isTotal: true),
           const SizedBox(height: 20),
 
           // Submit Order Button
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFF0000),
-              minimumSize: const Size(double.infinity, 55),
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 68),
             ),
             onPressed: () {
               // Trigger the animation
@@ -312,12 +306,36 @@ class _PaymentPageState extends State<PaymentPage> {
               });
             },
             child: Text(
-              "Submit Order ($currencySign${total.toStringAsFixed(2)})", // Use currencySign
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+              "Submit Order ($currencySign${total.toStringAsFixed(2)})",
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  // Build Summary Row Widget for Checkout Box
+  Widget buildSummaryRow(String label, double amount, {bool isTotal = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
+            fontSize: isTotal ? 18 : 16,
+            color: isTotal ? Colors.black : Colors.grey,
+          ),
+        ),
+        Text(
+          '$currencySign${amount.toStringAsFixed(2)}',
+          style: TextStyle(
+            fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
+            fontSize: isTotal ? 18 : 16,
+          ),
+        ),
+      ],
     );
   }
 }

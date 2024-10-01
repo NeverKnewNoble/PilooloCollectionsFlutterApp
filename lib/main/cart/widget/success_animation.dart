@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 
 class SuccessAnimation extends StatefulWidget {
   final VoidCallback onComplete;
@@ -61,7 +61,7 @@ class SuccessAnimationState extends State<SuccessAnimation> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Thank you for shopping with Piloolo Collections',
+                'Thank you for shopping with \nPiloolo Collections',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
