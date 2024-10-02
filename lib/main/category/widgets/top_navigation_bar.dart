@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:piloolo/components/currency.dart';
 import 'package:piloolo/main/category/category_gender_page.dart'; // Default page
 import 'package:piloolo/main/category/pages/men_page.dart'; // Men page
 import 'package:piloolo/main/category/pages/trad_wear.dart';

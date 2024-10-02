@@ -58,14 +58,22 @@ class Product {
   final String imagePath;
   final String title;
   final String price;
+  final String customMenCategory; // Add this field
 
-  Product({required this.imagePath, required this.title, required this.price});
+  Product({
+    required this.imagePath,
+    required this.title,
+    required this.price,
+    required this.customMenCategory, // Include it in the constructor
+  });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       imagePath: json['image'] ?? '', // Path to the product image
       title: json['item_name'] ?? 'No title',
       price: json['price_list_rate']?.toString() ?? '0', // Convert price to string
+      customMenCategory: json['custom_men_category'] ?? 'Unknown', // Map 'custom_men_category'
     );
   }
 }
+

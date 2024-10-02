@@ -16,56 +16,56 @@ class WomenPage extends StatefulWidget {
 }
 
 class WomenPageState extends State<WomenPage> {
-  String _selectedCategory = 'All'; // Changed to mutable state
+  String _selectedCategory = 'All';
 
+  // Method to handle category selection
   void _handleCategoryTap(String category) {
     setState(() {
-      _selectedCategory = category; // Update the selected category
+      _selectedCategory = category;
     });
   }
 
   Future<String> _convertPrice(double priceInUSD) async {
-  return await calculatePrice(priceInUSD, currency);
+    return await calculatePrice(priceInUSD, currency);
   }
 
-  late Future<List<Product>> futureProducts; // Declare the future for products
+  late Future<List<Product>> futureProducts;
 
   @override
   void initState() {
     super.initState();
-    // Initialize futureProducts to fetch products
+    // Fetch products when the page initializes
     futureProducts = ApiService().fetchProducts();
   }
 
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      selectedIndex: 1, // Category index for the bottom navigation
+      selectedIndex: 1, // Index for bottom navigation
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        automaticallyImplyLeading: false, // Removes the back arrow
+        automaticallyImplyLeading: false,
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.black), // Add a menu icon
+              icon: const Icon(Icons.menu, color: Colors.black),
               onPressed: () {
-                // Open the drawer
                 Scaffold.of(context).openDrawer();
               },
             );
           },
         ),
         actions: const [
-          ShoppingCartAction(), // Use the shopping cart action from the new file
+          ShoppingCartAction(), // Shopping cart icon
         ],
       ),
       backgroundColor: Colors.white,
       drawer: WomenLeftDrawer(
-        onCategoryTap: _handleCategoryTap, // Pass the callback to the drawer
+        onCategoryTap: _handleCategoryTap, // Pass category tap callback to the drawer
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // Align content to the start
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const TopNavigationBar(
             selectedIndex: 2, // 2 is for 'Women'
@@ -77,19 +77,17 @@ class WomenPageState extends State<WomenPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Align the category text to the top-left
+                    // Category title
                     Text(
-                      _selectedCategory, // Display the current selected category
+                      _selectedCategory,
                       style: const TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 255, 147, 147),
                       ),
                     ),
-                    // Add some spacing between the text and grid
                     const SizedBox(height: 20),
-
-                    // Grid of Products
+                    // Products grid
                     Expanded(
                       child: FutureBuilder<List<Product>>(
                         future: futureProducts,
@@ -101,26 +99,39 @@ class WomenPageState extends State<WomenPage> {
                           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return const Center(child: Text('No products found'));
                           } else {
-                            // Display the list of products
-                            final products = snapshot.data!;
+                            // Filter products based on selected category
+                            final products = snapshot.data!.where((product) {
+                              if (_selectedCategory == 'All') {
+                                return true; // Show all products if category is 'All'
+                              }
+                              // Filter products based on custom_women_category
+                              return product.customCategory == _selectedCategory;
+                            }).toList();
+
+                            if (products.isEmpty) {
+                              return const Center(
+                                child: Text('No items yet for now'),
+                              );
+                            }
+
+                            // Display the filtered products
                             return GridView.builder(
                               shrinkWrap: true,
-                              physics: const BouncingScrollPhysics(), // Allow grid to scroll independently
+                              physics: const BouncingScrollPhysics(),
                               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 16.0,
                                 mainAxisSpacing: 16.0,
                                 childAspectRatio: 0.6,
                               ),
-                              itemCount: products.length, // Use length of fetched products
+                              itemCount: products.length,
                               itemBuilder: (context, index) {
                                 final product = products[index];
-                                final priceInDouble = double.tryParse(product.price.toString()) ?? 0.0; // Convert price to double
+                                final priceInDouble = double.tryParse(product.price) ?? 0.0;
                                 final fullImageUrl = product.imagePath.startsWith('http')
                                     ? product.imagePath
                                     : '$baseUrl${product.imagePath}';
 
-                                // Use FutureBuilder to get converted price
                                 return FutureBuilder<String>(
                                   future: _convertPrice(priceInDouble),
                                   builder: (context, priceSnapshot) {
@@ -130,9 +141,9 @@ class WomenPageState extends State<WomenPage> {
                                       return Text('Error: ${priceSnapshot.error}');
                                     } else {
                                       return ProductCard(
-                                        imagePath: fullImageUrl, // Ensure full URL for images
+                                        imagePath: fullImageUrl,
                                         title: product.title,
-                                        price: '$currencySign${priceSnapshot.data}', // Use converted price
+                                        price: '$currencySign${priceSnapshot.data}', // Display converted price
                                       );
                                     }
                                   },
@@ -143,7 +154,6 @@ class WomenPageState extends State<WomenPage> {
                         },
                       ),
                     ),
-
                   ],
                 ),
               ),

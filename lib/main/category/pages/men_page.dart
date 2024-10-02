@@ -97,10 +97,27 @@ class MenPageState extends State<MenPage> {
                           } else if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                            return const Center(child: Text('No products found'));
+                            return const Center(child: Text('No items yet'));
                           } else {
                             // Display the list of products
                             final products = snapshot.data!;
+
+                            // Filter products based on _selectedCategory
+                            final filteredProducts = _selectedCategory == 'All'
+                                ? products
+                                : products.where((product) => product.customMenCategory == _selectedCategory).toList();
+
+                            // Check if the filtered list is empty
+                            if (filteredProducts.isEmpty) {
+                              return const Center(
+                                child: Text(
+                                  'No items yet for now',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              );
+                            }
+
+                            // Display grid of filtered products
                             return GridView.builder(
                               shrinkWrap: true,
                               physics: const BouncingScrollPhysics(), // Allow grid to scroll independently
@@ -110,9 +127,9 @@ class MenPageState extends State<MenPage> {
                                 mainAxisSpacing: 16.0,
                                 childAspectRatio: 0.6,
                               ),
-                              itemCount: products.length, // Use length of fetched products
+                              itemCount: filteredProducts.length, // Use length of filtered products
                               itemBuilder: (context, index) {
-                                final product = products[index];
+                                final product = filteredProducts[index];
                                 final priceInDouble = double.tryParse(product.price.toString()) ?? 0.0; // Convert price to double
                                 final fullImageUrl = product.imagePath.startsWith('http')
                                     ? product.imagePath

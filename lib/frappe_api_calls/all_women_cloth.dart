@@ -58,14 +58,22 @@ class Product {
   final String imagePath;
   final String title;
   final String price;
+  final String customCategory; // Add this field
 
-  Product({required this.imagePath, required this.title, required this.price});
+  Product({
+    required this.imagePath,
+    required this.title,
+    required this.price,
+    required this.customCategory, // Initialize in constructor
+  });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      imagePath: json['image'] ?? '', // Path to the product image
+      imagePath: json['image'] ?? '', 
       title: json['item_name'] ?? 'No title',
-      price: json['price_list_rate']?.toString() ?? '0', // Convert price to string
+      price: json['price_list_rate']?.toString() ?? '0', 
+      customCategory: json['custom_women_category'] ?? 'All', // Fetch the category from JSON
     );
   }
 }
+
