@@ -17,11 +17,21 @@ class WomenPage extends StatefulWidget {
 
 class WomenPageState extends State<WomenPage> {
   String _selectedCategory = 'All';
+  double _minPrice = 0;
+  double _maxPrice = 1000;
 
   // Method to handle category selection
   void _handleCategoryTap(String category) {
     setState(() {
       _selectedCategory = category;
+    });
+  }
+
+  // Method to handle price range changes
+  void _handlePriceRangeChange(double minPrice, double maxPrice) {
+    setState(() {
+      _minPrice = minPrice;
+      _maxPrice = maxPrice;
     });
   }
 
@@ -63,6 +73,7 @@ class WomenPageState extends State<WomenPage> {
       backgroundColor: Colors.white,
       drawer: WomenLeftDrawer(
         onCategoryTap: _handleCategoryTap, // Pass category tap callback to the drawer
+        onPriceRangeChanged: _handlePriceRangeChange, // Handle price range changes
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,13 +110,12 @@ class WomenPageState extends State<WomenPage> {
                           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return const Center(child: Text('No products found'));
                           } else {
-                            // Filter products based on selected category
+                            // Filter products based on selected category and price range
                             final products = snapshot.data!.where((product) {
-                              if (_selectedCategory == 'All') {
-                                return true; // Show all products if category is 'All'
-                              }
-                              // Filter products based on custom_women_category
-                              return product.customCategory == _selectedCategory;
+                              final price = double.tryParse(product.price) ?? 0.0;
+                              final matchesCategory = _selectedCategory == 'All' || product.customCategory == _selectedCategory;
+                              final matchesPrice = price >= _minPrice && price <= _maxPrice;
+                              return matchesCategory && matchesPrice;
                             }).toList();
 
                             if (products.isEmpty) {

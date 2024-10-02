@@ -7,12 +7,11 @@ import 'package:logger/logger.dart';
 var logger = Logger();
 
 class ApiService {
+  // Existing method to fetch products
   Future<List<Product>> fetchProducts() async {
     try {
-      // Define the API endpoint
       var url = Uri.parse('$baseUrl/api/v2/method/piloolo_market.api.call_items.get_items');
 
-      // Send a GET request
       var response = await http.get(
         url,
         headers: {
@@ -20,35 +19,48 @@ class ApiService {
         },
       );
 
-      // Log the response body for debugging
       logger.i('Response body: ${response.body}');
 
-      // Check if the request was successful
       if (response.statusCode == 200) {
-        // Parse the response body
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
-        // Check if the response contains the 'data' field and parse it
         if (jsonResponse.containsKey('data') && jsonResponse['data'].containsKey('data')) {
-          final List<dynamic> data = jsonResponse['data']['data']; // Extract the nested list
-          
-          // Log the parsed data for debugging
+          final List<dynamic> data = jsonResponse['data']['data'];
+
           logger.i('Parsed product data: $data');
 
-          // Map JSON to a list of Product instances
           return data.map((item) => Product.fromJson(item)).toList();
         } else {
           logger.e('Unexpected response format: Missing "data" field');
           throw Exception('Unexpected response format: Missing "data" field');
         }
       } else {
-        // Log and throw error for failed response
         logger.w('Failed to fetch products. Status code: ${response.statusCode}, Response body: ${response.body}');
         throw Exception('Failed to load products');
       }
     } catch (e) {
       logger.e('Error fetching products', error: e);
-      rethrow; // Rethrow the error for further handling in the app
+      rethrow;
+    }
+  }
+
+  // Method to filter products based on search query
+  Future<List<Product>> filterProducts(String query) async {
+    try {
+      // Fetch all products
+      List<Product> allProducts = await fetchProducts();
+
+      // Filter products that match the search query
+      List<Product> filteredProducts = allProducts
+          .where((product) =>
+              product.title.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+
+      return filteredProducts;
+    } catch (e) {
+      // Log and rethrow error
+      logger.e('Error filtering products', error: e);
+      rethrow;
     }
   }
 }

@@ -23,12 +23,17 @@ class ShoppingCartAction extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10), // Set border radius
+                borderRadius: BorderRadius.circular(10),
               ),
               backgroundColor: Colors.transparent,
-              padding: EdgeInsets.zero, // Remove padding
-              elevation: 0, // Removes the elevation (shadow/border)
-              minimumSize: const Size(50, 50), // Set minimum size for the button
+              padding: EdgeInsets.zero,
+              elevation: 0, 
+              shadowColor: Colors.transparent, 
+              minimumSize: const Size(60, 60), 
+            ).copyWith(
+              // Remove any splash effect
+              overlayColor: WidgetStateProperty.all(Colors.transparent),
+              elevation: WidgetStateProperty.all(0),
             ),
             child: const Icon(
               Icons.add_shopping_cart,
@@ -38,8 +43,8 @@ class ShoppingCartAction extends StatelessWidget {
           ),
           // The Cart Count Dot
           Positioned(
-            right: 13, // Adjust position for the dot
-            top: 10, // Adjust position for the dot
+            right: 19,
+            top: 10, 
             child: Consumer<CartProvider>(
               builder: (context, cartProvider, child) {
                 return Container(

@@ -3,8 +3,9 @@ import 'package:piloolo/main/category/widgets/range_slider.dart';
 
 class MenLeftDrawer extends StatelessWidget {
   final Function(String) onCategoryTap;
+  final Function(double, double) onPriceRangeChanged;
 
-  const MenLeftDrawer({super.key, required this.onCategoryTap});
+  const MenLeftDrawer({super.key, required this.onCategoryTap, required this.onPriceRangeChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +33,22 @@ class MenLeftDrawer extends StatelessWidget {
             ),
             // Drawer Menu Items
             buildListTile(context, 'All', onCategoryTap),
-            buildListTile(context, 'Suit | Coat', onCategoryTap, 'images/salesimages/real pic/cat-office.jpg'),
-            buildListTile(context, 'Shirt', onCategoryTap, 'images/salesimages/real pic/shirt.jpg'),
-            buildListTile(context, 'T-shirt', onCategoryTap, 'images/salesimages/real pic/catt-shirt.jpg'),
-            buildListTile(context, 'Trousers', onCategoryTap, 'images/salesimages/real pic/carttrousers.jpg'),
-            buildListTile(context, 'Shorts', onCategoryTap, 'images/salesimages/real pic/m-shorts.jpg'),
-            buildListTile(context, 'Hoodies', onCategoryTap, 'images/salesimages/real pic/1721025213a33f67ae5f77d58e2987c90821a7c102_thumbnail_405x552.jpeg'),
-            buildListTile(context, 'Jeans', onCategoryTap, 'images/salesimages/real pic/m-jeans.jpeg'),
-            buildListTile(context, 'Shoes', onCategoryTap, 'images/salesimages/real pic/m-shoes.jpg'),
+            buildListTile(context, 'Suit | Coat', onCategoryTap),
+            buildListTile(context, 'Shirt', onCategoryTap),
+            buildListTile(context, 'T-shirt', onCategoryTap),
+            buildListTile(context, 'Trousers', onCategoryTap),
+            buildListTile(context, 'Shorts', onCategoryTap),
+            buildListTile(context, 'Hoodies', onCategoryTap),
+            buildListTile(context, 'Jeans', onCategoryTap),
+            buildListTile(context, 'Shoes', onCategoryTap),
             const SizedBox(height: 150),
 
             // Add the RangeSlider widget
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 2.0),
-              child: RangeSliderExample(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2.0),
+              child: RangeSliderExample(
+                onPriceRangeChanged: onPriceRangeChanged, // Pass the price range callback
+              ),
             ),
           ],
         ),
@@ -53,21 +56,8 @@ class MenLeftDrawer extends StatelessWidget {
     );
   }
 
-  ListTile buildListTile(BuildContext context, String title, Function(String) onTap, [String? imagePath]) {
+  ListTile buildListTile(BuildContext context, String title, Function(String) onTap) {
     return ListTile(
-      leading: imagePath != null
-          ? Container(
-              width: 40, // Set the width of the circle
-              height: 40, // Set the height of the circle
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: AssetImage(imagePath),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            )
-          : const SizedBox(width: 40, height: 10),
       title: Text(
         title,
         style: const TextStyle(

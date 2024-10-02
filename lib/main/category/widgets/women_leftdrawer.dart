@@ -3,8 +3,9 @@ import 'package:piloolo/main/category/widgets/range_slider.dart';
 
 class WomenLeftDrawer extends StatelessWidget {
   final Function(String) onCategoryTap;
+  final Function(double, double) onPriceRangeChanged;
 
-  const WomenLeftDrawer({super.key, required this.onCategoryTap});
+  const WomenLeftDrawer({super.key, required this.onCategoryTap, required this.onPriceRangeChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +44,12 @@ class WomenLeftDrawer extends StatelessWidget {
             buildListTile(context, 'Shoes', onCategoryTap, 'images/salesimages/real pic/w-shoes.jpg'),
             const SizedBox(height: 100),
 
-            // Add the RangeSlider widget
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 2.0),
-              child: RangeSliderExample(),
+            // Add the RangeSlider widget for price range filtering
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2.0),
+              child: RangeSliderExample(
+                onPriceRangeChanged: onPriceRangeChanged, // Handle price range changes
+              ),
             ),
           ],
         ),

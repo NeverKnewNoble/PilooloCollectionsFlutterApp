@@ -16,11 +16,20 @@ class MenPage extends StatefulWidget {
 }
 
 class MenPageState extends State<MenPage> {
-  String _selectedCategory = 'All'; // Changed to mutable state
+  String _selectedCategory = 'All';
+  double _minPrice = 0;
+  double _maxPrice = 1000;
 
   void _handleCategoryTap(String category) {
     setState(() {
-      _selectedCategory = category; // Update the selected category
+      _selectedCategory = category;
+    });
+  }
+
+  void _handlePriceRangeChange(double minPrice, double maxPrice) {
+    setState(() {
+      _minPrice = minPrice;
+      _maxPrice = maxPrice;
     });
   }
 
@@ -28,12 +37,11 @@ class MenPageState extends State<MenPage> {
     return await calculatePrice(priceInUSD, currency);
   }
 
-  late Future<List<Product>> futureProducts; // Declare the future for products
+  late Future<List<Product>> futureProducts;
 
   @override
   void initState() {
     super.initState();
-    // Initialize futureProducts to fetch products
     futureProducts = ApiService().fetchProducts();
   }
 
@@ -62,7 +70,8 @@ class MenPageState extends State<MenPage> {
       ),
       backgroundColor: Colors.white,
       drawer: MenLeftDrawer(
-        onCategoryTap: _handleCategoryTap, // Pass the callback to the drawer
+        onCategoryTap: _handleCategoryTap, // Handle category changes
+        onPriceRangeChanged: _handlePriceRangeChange, // Handle price range changes
       ),
       body: Column(
         children: [
@@ -102,10 +111,13 @@ class MenPageState extends State<MenPage> {
                             // Display the list of products
                             final products = snapshot.data!;
 
-                            // Filter products based on _selectedCategory
-                            final filteredProducts = _selectedCategory == 'All'
-                                ? products
-                                : products.where((product) => product.customMenCategory == _selectedCategory).toList();
+                            // Filter products based on category and price range
+                            final filteredProducts = products.where((product) {
+                              final price = double.tryParse(product.price.toString()) ?? 0.0;
+                              final matchesCategory = _selectedCategory == 'All' || product.customMenCategory == _selectedCategory;
+                              final matchesPrice = price >= _minPrice && price <= _maxPrice;
+                              return matchesCategory && matchesPrice;
+                            }).toList();
 
                             // Check if the filtered list is empty
                             if (filteredProducts.isEmpty) {
