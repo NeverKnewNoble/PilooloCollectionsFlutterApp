@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/main/account/check_out_info.dart';
+import 'package:piloolo/main/account/contact_us.dart';
+import 'package:piloolo/main/account/favorite_page.dart';
 import 'package:piloolo/pages/login.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -126,6 +128,7 @@ class ProfilePageState extends State<ProfilePage> {
                         title: const Text('Wishlist'),
                         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
                         onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritesPage()));
                           // Handle navigation to Wishlist
                         },
                       ),
@@ -143,6 +146,7 @@ class ProfilePageState extends State<ProfilePage> {
                         title: const Text('Contact Us'),
                         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
                         onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const ContactUsPage()));
                           // Handle navigation to Contact Us
                         },
                       ),

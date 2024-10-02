@@ -297,7 +297,7 @@ class _PaymentPageState extends State<PaymentPage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 68),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 62),
             ),
             onPressed: () {
               // Trigger the animation
