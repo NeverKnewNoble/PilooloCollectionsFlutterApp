@@ -79,7 +79,7 @@ class WomenPageState extends State<WomenPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const TopNavigationBar(
-            selectedIndex: 2, // 2 is for 'Women'
+            selectedIndex: 1, // 2 is for 'Women'
           ),
           Expanded(
             child: SafeArea(

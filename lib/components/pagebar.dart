@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:piloolo/main/account/account.dart';
 import 'package:piloolo/main/cart/cart.dart';
-import 'package:piloolo/main/category/category_gender_page.dart';
+import 'package:piloolo/main/category/pages/men_page.dart';
 import 'package:piloolo/main/home/home.dart';
 
 
@@ -46,7 +46,7 @@ class MainScaffoldState extends State<MainScaffold> {
         page = const HomePage();
         break;
       case 1:
-        page = const CategoryGenderPage();
+        page = const MenPage();
         break;
       case 2:
         page = const CartPage();

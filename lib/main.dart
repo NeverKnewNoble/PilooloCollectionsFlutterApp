@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
-import 'package:piloolo/main/category/category_gender_page.dart';
+import 'package:piloolo/main/category/pages/men_page.dart';
 import 'package:piloolo/main/home/home.dart';
 import 'package:provider/provider.dart';
 // import 'package:flutter_localizations/flutter_localizations.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       // ],
       title: 'Piloolo',
       debugShowCheckedModeBanner: false,
-      home: const CategoryGenderPage(),
+      home: const MenPage(),
        routes: {
         'HomePage': (context) => const HomePage(), // Define the route for the HomePage
         // Add other routes if necessary

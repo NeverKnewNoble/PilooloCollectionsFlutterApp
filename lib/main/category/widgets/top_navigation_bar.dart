@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:piloolo/main/category/category_gender_page.dart'; // Default page
 import 'package:piloolo/main/category/pages/men_page.dart'; // Men page
 import 'package:piloolo/main/category/pages/trad_wear.dart';
 import 'package:piloolo/main/category/pages/women_page.dart'; // Women page
@@ -19,20 +18,16 @@ class TopNavigationBarState extends State<TopNavigationBar> {
   Widget page;
   switch (index) {
     case 0:
-      page = const CategoryGenderPage();
-
-      break;
-    case 1:
       page = const MenPage();
       break;
-    case 2:
+    case 1:
       page = const WomenPage();
       break;
-    case 3:
+    case 2:
       page = const TradWearPage();
       break;
     default:
-      page = const CategoryGenderPage();
+      page = const MenPage();
 
   }
 
@@ -65,10 +60,9 @@ class TopNavigationBarState extends State<TopNavigationBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildNavItem('All', 0),
-          _buildNavItem('Men', 1),
-          _buildNavItem('Women', 2),
-          _buildNavItem('Traditional', 3),
+          _buildNavItem('Men', 0),
+          _buildNavItem('Women', 1),
+          _buildNavItem('Traditional', 2),
         ],
       ),
     );

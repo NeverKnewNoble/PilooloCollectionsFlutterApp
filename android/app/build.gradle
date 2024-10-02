@@ -42,3 +42,8 @@ android {
 flutter {
     source = "../.."
 }
+
+// defaultConfig {
+//     minSdkVersion 21
+//     targetSdkVersion 31
+// }

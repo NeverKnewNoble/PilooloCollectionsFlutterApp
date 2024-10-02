@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/main/account/check_out_info.dart';
@@ -14,6 +16,19 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
+  File? _image; // Store the picked image
+  final ImagePicker _picker = ImagePicker(); // Image picker instance
+
+  // Method to pick an image
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path); // Update the selected image
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
@@ -36,11 +51,23 @@ class ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Column(
                 children: [
-                  // Profile Picture
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundImage: const AssetImage('images/salesimages/menblue.jpeg'),
-                    backgroundColor: Colors.grey.shade200, // Background color
+                  // Profile Picture with GestureDetector to trigger image picking
+                  GestureDetector(
+                    onTap: _pickImage, // Pick image when tapped
+                    child: CircleAvatar(
+                      radius: 60,
+                      backgroundImage: _image != null
+                          ? FileImage(_image!) // Display selected image
+                          : const AssetImage('') as ImageProvider,
+                      backgroundColor: Colors.grey.shade200, // Background color
+                      child: _image == null
+                          ? const Icon(
+                              Icons.add_a_photo,
+                              size: 40,
+                              color: Colors.grey,
+                            )
+                          : null,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   // Name
@@ -49,7 +76,6 @@ class ProfilePageState extends State<ProfilePage> {
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
-                      // color: Color(0xFFFF6347), // Tomato color for contrast
                       color: Colors.black,
                     ),
                   ),
@@ -88,13 +114,11 @@ class ProfilePageState extends State<ProfilePage> {
                       ),
                       elevation: 4,
                       child: ListTile(
-                        
                         leading: const Icon(Icons.person, color: Colors.black),
                         title: const Text('Account Information'),
                         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckOutInfoPage()));
-                          // Handle navigation to Account Info
                         },
                       ),
                     ),
@@ -129,7 +153,6 @@ class ProfilePageState extends State<ProfilePage> {
                         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritesPage()));
-                          // Handle navigation to Wishlist
                         },
                       ),
                     ),
@@ -147,11 +170,9 @@ class ProfilePageState extends State<ProfilePage> {
                         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const ContactUsPage()));
-                          // Handle navigation to Contact Us
                         },
                       ),
                     ),
-
                     const SizedBox(height: 10),
                     // Logout Card
                     Card(
@@ -174,7 +195,6 @@ class ProfilePageState extends State<ProfilePage> {
                         },
                       ),
                     ),
-                  
                   ],
                 ),
               ),

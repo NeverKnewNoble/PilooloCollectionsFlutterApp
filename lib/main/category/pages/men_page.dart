@@ -76,7 +76,7 @@ class MenPageState extends State<MenPage> {
       body: Column(
         children: [
           const TopNavigationBar(
-            selectedIndex: 1, // 1 is for 'Men'
+            selectedIndex: 0, // 1 is for 'Men'
           ),
           Expanded(
             child: SafeArea(

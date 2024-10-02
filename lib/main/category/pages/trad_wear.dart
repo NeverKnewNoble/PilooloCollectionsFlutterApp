@@ -47,7 +47,7 @@ class WomenPageState extends State<TradWearPage> {
       body: Column(
         children: [
           const TopNavigationBar(
-            selectedIndex: 3, // 2 is for 'Women'
+            selectedIndex: 2, 
           ),
           Expanded(
             child: SafeArea(
