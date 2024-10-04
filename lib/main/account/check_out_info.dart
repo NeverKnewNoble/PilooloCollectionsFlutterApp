@@ -76,43 +76,7 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
     }
   }
 
-  // // Submit data to Frappe server
-  // Future<void> submitFormData() async {
-  //   // Prepare the data for submission
-  //   Map<String, dynamic> data = {
-  //     'location': _selectedCountry,
-  //     'first_name': _firstNameController.text,
-  //     'last_name': _lastNameController.text,
-  //     'phone_number': '$_phonePrefix${_phoneController.text}',
-  //     'city': _cityController.text,
-  //     'stateprovidence_optional': _stateProvinceController.text,
-  //     'postzip_code': _zipCodeController.text,
-  //     'address_line_1': _address1Controller.text,
-  //     'address_line_2_optional': _address2Controller.text,
-  //   };
 
-  //   try {
-  //     // Check if it's a new document or updating an existing one
-  //     if (isNewDocument()) {
-  //       await createUserAddressInfo(data);
-  //     } else {
-  //       String docName = 'existing-document-name'; // Update this as needed
-  //       await updateUserAddressInfo(docName, data);
-  //     }
-
-  //     if (mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text('Data saved successfully')),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     if (mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Failed to save data: $e')),
-  //       );
-  //     }
-  //   }
-  // }
 
   bool isNewDocument() {
     // Replace this logic with how you determine if the document is new or existing

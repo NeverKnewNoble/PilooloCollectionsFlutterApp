@@ -4,6 +4,7 @@ import 'package:piloolo/pages/forgot_pass.dart';
 import 'package:piloolo/pages/intro.dart';
 import 'package:piloolo/pages/sign_up.dart';
 import 'package:piloolo/main/home/home.dart';
+import 'package:piloolo/frappe_api_calls/login_api.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -16,6 +17,50 @@ class SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  Future<void> _login() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
+      setState(() {
+      });
+
+      try {
+        final response = await verifyLogin(_emailController.text, _passwordController.text);
+        if (kDebugMode) {
+          print('API Response: $response');
+        } // Log the response
+
+        setState(() {
+        });
+
+        if (!mounted) return;
+
+        if (response['status'] == 'success') {
+          // Navigate to HomePage or the appropriate screen after successful login
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(response['message'] ?? 'Login failed')),
+          );
+        }
+      } catch (e) {
+        setState(() {
+        });
+
+        if (!mounted) return;
+
+        if (kDebugMode) {
+          print('Error: $e');
+        } // Log the error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Something went wrong. Please try again.')),
+        );
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -119,15 +164,8 @@ class SignInPageState extends State<SignInPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Process sign-in logic here
-                    if (kDebugMode) {
-                      print('Email: ${_emailController.text}');
-                    }
-                    if (kDebugMode) {
-                      print('Password: ${_passwordController.text}');
-                    }
-                    //Navigate to another page after sign-in (e.g., HomePage)
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+                    // Call the `_login` method to trigger the API request
+                    _login();
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -146,45 +184,13 @@ class SignInPageState extends State<SignInPage> {
                   ),
                 ),
               ),
-              // const SizedBox(height: 10.0),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     // Google sign-in logic here
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.white,
-              //     padding: const EdgeInsets.symmetric(vertical: 5.0),
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(25.0),
-              //     ),
-              //   ),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: <Widget>[
-              //       Image.asset(
-              //         'images/google_logo.png',
-              //         width: 50,
-              //         height: 50,
-              //       ),
-              //       const SizedBox(width: 10),
-              //       const Text(
-              //         'Continue with Google',
-              //         style: TextStyle(
-              //           color: Colors.black,
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: 20,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               const SizedBox(height: 300.0),
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ForgotPasswordPage()),
+                        builder: (context) => ForgotPasswordPage()),
                   );
                 },
                 child: const Text(

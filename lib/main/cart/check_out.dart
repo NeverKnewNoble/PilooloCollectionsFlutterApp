@@ -174,7 +174,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
-
+ 
               // Phone Number with Prefix (read-only)
               Row(
                 children: [
@@ -261,18 +261,18 @@ class _CheckOutPageState extends State<CheckOutPage> {
               ),
               const SizedBox(height: 16),
 
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(width: 15),
-                  Text(
-                    'Save your Information',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  SizedBox(width: 15),
-                  SwitchExample(),
-                ],
-              ),
+              // const Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     SizedBox(width: 15),
+              //     Text(
+              //       'Save your Information',
+              //       style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+              //     ),
+              //     SizedBox(width: 15),
+              //     SwitchExample(),
+              //   ],
+              // ),
 
               const SizedBox(height: 32),
 

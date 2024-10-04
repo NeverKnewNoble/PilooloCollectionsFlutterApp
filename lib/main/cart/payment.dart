@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:piloolo/frappe_api_calls/order.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
 import 'package:piloolo/main/cart/widget/success_animation.dart'; 
@@ -299,7 +300,11 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 62),
             ),
-            onPressed: () {
+            onPressed: () async {
+              // Call the API to create the order
+              final orderService = OrderService();
+              await orderService.createOrder(context);
+
               // Trigger the animation
               setState(() {
                 _showAnimation = true;
@@ -309,7 +314,8 @@ class _PaymentPageState extends State<PaymentPage> {
               "Submit Order ($currencySign${total.toStringAsFixed(2)})",
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
             ),
-          ),
+          )
+
         ],
       ),
     );
