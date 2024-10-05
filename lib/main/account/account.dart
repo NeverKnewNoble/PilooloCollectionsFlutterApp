@@ -31,7 +31,7 @@ class ProfilePageState extends State<ProfilePage> {
   Future<void> loadUserName() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _firstName = prefs.getString('first_name') ?? 'John Doe'; // Default to "John Doe" if not found
+      _firstName = prefs.getString('first_name') ?? 'Your Name'; // Default to "John Doe" if not found
     });
   }
 

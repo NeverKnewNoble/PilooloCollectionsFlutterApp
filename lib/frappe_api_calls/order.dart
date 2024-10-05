@@ -34,7 +34,8 @@ class OrderService {
       return {
         'item': item.title,
         'item_price': item.price.toString(),
-        'item_size': item.size, 
+        'item_size': item.size,
+        'item_quantity': item.quantity.toString(),
       };
     }).toList();
 
