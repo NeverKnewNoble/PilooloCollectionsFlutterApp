@@ -5,6 +5,7 @@ import 'package:piloolo/pages/intro.dart';
 import 'package:piloolo/pages/sign_up.dart';
 import 'package:piloolo/main/home/home.dart';
 import 'package:piloolo/frappe_api_calls/login_api.dart';
+// Import shared_preferences package
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -21,22 +22,25 @@ class SignInPageState extends State<SignInPage> {
   Future<void> _login() async {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
-      setState(() {
-      });
+      setState(() {});
 
       try {
         final response = await verifyLogin(_emailController.text, _passwordController.text);
         if (kDebugMode) {
           print('API Response: $response');
-        } // Log the response
+        }
 
-        setState(() {
-        });
+        setState(() {});
 
         if (!mounted) return;
 
         if (response['status'] == 'success') {
-          // Navigate to HomePage or the appropriate screen after successful login
+          // Save user email and first name to local storage
+          // final prefs = await SharedPreferences.getInstance();
+          // await prefs.setString('email', _emailController.text);
+          // await prefs.setString('first_name', response['first_name']); // Assuming the API returns the user's first name
+
+          // Navigate to HomePage or appropriate screen after successful login
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const HomePage()),
@@ -47,14 +51,13 @@ class SignInPageState extends State<SignInPage> {
           );
         }
       } catch (e) {
-        setState(() {
-        });
+        setState(() {});
 
         if (!mounted) return;
 
         if (kDebugMode) {
           print('Error: $e');
-        } // Log the error
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Something went wrong. Please try again.')),
         );

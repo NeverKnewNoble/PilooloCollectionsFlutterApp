@@ -7,6 +7,7 @@ import 'package:piloolo/main/account/check_out_info.dart';
 import 'package:piloolo/main/account/contact_us.dart';
 import 'package:piloolo/main/account/favorite_page.dart';
 import 'package:piloolo/pages/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -18,6 +19,21 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   File? _image; // Store the picked image
   final ImagePicker _picker = ImagePicker(); // Image picker instance
+  String _firstName = ''; // Store the user's first name
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserName(); // Load user's first name on init
+  }
+
+  // Method to load the user's first name from local storage
+  Future<void> loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _firstName = prefs.getString('first_name') ?? 'John Doe'; // Default to "John Doe" if not found
+    });
+  }
 
   // Method to pick an image
   Future<void> _pickImage() async {
@@ -58,7 +74,7 @@ class ProfilePageState extends State<ProfilePage> {
                       radius: 60,
                       backgroundImage: _image != null
                           ? FileImage(_image!) // Display selected image
-                          : const AssetImage('') as ImageProvider,
+                          : const AssetImage('assets/images/default_avatar.png') as ImageProvider, // Default placeholder image
                       backgroundColor: Colors.grey.shade200, // Background color
                       child: _image == null
                           ? const Icon(
@@ -71,9 +87,9 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 16),
                   // Name
-                  const Text(
-                    'John Doe', // Replace with dynamic name if needed
-                    style: TextStyle(
+                  Text(
+                    _firstName, // Use the dynamically loaded first name
+                    style: const TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,

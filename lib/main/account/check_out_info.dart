@@ -12,6 +12,8 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
   final _formKey = GlobalKey<FormState>();
   String? _selectedCountry = 'Ghana';
   String _phonePrefix = '+233';
+
+  final TextEditingController _emailController = TextEditingController(); // Added email controller
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -43,6 +45,7 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
       setState(() {
         _selectedCountry = prefs.getString('location') ?? 'Ghana';
         _phonePrefix = _countryPhonePrefixes[_selectedCountry!]!;
+        _emailController.text = prefs.getString('email') ?? ''; // Load email
         _firstNameController.text = prefs.getString('first_name') ?? '';
         _lastNameController.text = prefs.getString('last_name') ?? '';
         _phoneController.text = prefs.getString('phone_number')?.replaceFirst(_phonePrefix, '') ?? '';
@@ -60,6 +63,7 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('location', _selectedCountry!);
+    await prefs.setString('email', _emailController.text); // Save email
     await prefs.setString('first_name', _firstNameController.text);
     await prefs.setString('last_name', _lastNameController.text);
     await prefs.setString('phone_number', '$_phonePrefix${_phoneController.text}');
@@ -76,13 +80,10 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
     }
   }
 
-
-
   bool isNewDocument() {
     // Replace this logic with how you determine if the document is new or existing
     return true; // Return true for new documents
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +105,27 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
           child: ListView(
             children: [
               const SizedBox(height: 4),
+              // Email Field
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!RegExp(
+                          r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+                      .hasMatch(value)) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
               // Location Dropdown
               DropdownButtonFormField<String>(
                 value: _selectedCountry,
@@ -262,26 +284,12 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
                 ),
                 child: const Text(
                   'Save',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ),
-              // const SizedBox(height: 16),
-              // // Submit Button
-              // ElevatedButton(
-              //   onPressed: () {
-              //     if (_formKey.currentState!.validate()) {
-              //       submitFormData(); // Submit data to Frappe backend
-              //     }
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     minimumSize: const Size(double.infinity, 55),
-              //     backgroundColor: Colors.green,
-              //   ),
-              //   child: const Text(
-              //     'Submit',
-              //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-              //   ),
-              // ),
             ],
           ),
         ),

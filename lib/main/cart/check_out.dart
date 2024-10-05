@@ -2,49 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:piloolo/main/cart/payment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// SwitchExample Widget code added directly here for integration
-class SwitchExample extends StatefulWidget {
-  const SwitchExample({super.key});
-
-  @override
-  State<SwitchExample> createState() => _SwitchExampleState();
-}
-
-class _SwitchExampleState extends State<SwitchExample> {
-  bool light0 = true;
-  bool light1 = true;
-
-  final MaterialStateProperty<Icon?> thumbIcon =
-      MaterialStateProperty.resolveWith<Icon?>(
-    (Set<MaterialState> states) {
-      if (states.contains(MaterialState.selected)) {
-        return const Icon(Icons.check);
-      }
-      return const Icon(Icons.close);
-    },
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Switch(
-          thumbIcon: thumbIcon,
-          value: light1,
-          activeColor: Colors.green, 
-          activeTrackColor: Colors.lightGreen, 
-          onChanged: (bool value) {
-            setState(() {
-              light1 = value;
-            });
-          },
-        ),
-      ],
-    );
-  }
-}
-
 class CheckOutPage extends StatefulWidget {
   const CheckOutPage({super.key});
 
@@ -56,6 +13,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
   final _formKey = GlobalKey<FormState>();
   String? _selectedCountry = 'Ghana';
   String _phonePrefix = '+233';
+
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -86,7 +45,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
       setState(() {
         _selectedCountry = prefs.getString('location') ?? 'Ghana';
         _phonePrefix = _countryPhonePrefixes[_selectedCountry!]!;
-        _firstNameController.text = prefs.getString('first_name') ?? '';
+        _emailController.text = prefs.getString('email') ?? ''; // Load email
+        _firstNameController.text = prefs.getString('first_name') ?? ''; // Load first name
         _lastNameController.text = prefs.getString('last_name') ?? '';
         _phoneController.text = prefs.getString('phone_number')?.replaceFirst(_phonePrefix, '') ?? '';
         _cityController.text = prefs.getString('city') ?? '';
@@ -106,7 +66,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
   // Check if any field is empty before navigating to next page
   bool areFieldsEmpty() {
-    return _firstNameController.text.isEmpty ||
+    return _emailController.text.isEmpty ||
+        _firstNameController.text.isEmpty ||
         _lastNameController.text.isEmpty ||
         _phoneController.text.isEmpty ||
         _cityController.text.isEmpty ||
@@ -126,6 +87,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -134,6 +96,17 @@ class _CheckOutPageState extends State<CheckOutPage> {
           child: ListView(
             children: [
               const SizedBox(height: 4),
+              // Email Field (read-only)
+              TextFormField(
+                controller: _emailController,
+                readOnly: true,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+                onTap: _showEditWarning,
+              ),
+              const SizedBox(height: 16),
               // Country Dropdown (read-only)
               DropdownButtonFormField<String>(
                 value: _selectedCountry,
@@ -150,7 +123,6 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 onChanged: null, // Disable dropdown
               ),
               const SizedBox(height: 16),
-
               // First Name (read-only)
               TextFormField(
                 controller: _firstNameController,
@@ -162,7 +134,6 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
-
               // Last Name (read-only)
               TextFormField(
                 controller: _lastNameController,
@@ -174,7 +145,6 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
- 
               // Phone Number with Prefix (read-only)
               Row(
                 children: [
@@ -201,7 +171,6 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 ],
               ),
               const SizedBox(height: 32),
-
               // City (read-only)
               TextFormField(
                 controller: _cityController,
@@ -213,7 +182,6 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
-
               // State/Province (Optional) (read-only)
               TextFormField(
                 readOnly: true,
@@ -224,7 +192,6 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
-
               // Post/Zip Code (read-only)
               TextFormField(
                 controller: _zipCodeController,
@@ -236,7 +203,6 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
-
               // Address Line 1 (read-only)
               TextFormField(
                 controller: _address1Controller,
@@ -248,7 +214,6 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 onTap: _showEditWarning,
               ),
               const SizedBox(height: 16),
-
               // Address Line 2 (Optional) (read-only)
               TextFormField(
                 controller: _address2Controller,
@@ -259,23 +224,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 ),
                 onTap: _showEditWarning,
               ),
-              const SizedBox(height: 16),
-
-              // const Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     SizedBox(width: 15),
-              //     Text(
-              //       'Save your Information',
-              //       style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-              //     ),
-              //     SizedBox(width: 15),
-              //     SwitchExample(),
-              //   ],
-              // ),
-
               const SizedBox(height: 32),
-
               // Next Button
               ElevatedButton(
                 onPressed: () {

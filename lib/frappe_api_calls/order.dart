@@ -13,7 +13,7 @@ class OrderService {
 
     // Retrieve shipping address and user info from SharedPreferences
     final prefs = await SharedPreferences.getInstance();
-    String userEmail = prefs.getString('user') ?? "nortexnoble@gmail.com"; // Replace with user logic if necessary
+    String userEmail = prefs.getString('user') ?? ""; // Replace with user logic if necessary
     String firstName = prefs.getString('first_name') ?? '';
     String lastName = prefs.getString('last_name') ?? '';
     String location = prefs.getString('location') ?? 'Ghana';
@@ -23,16 +23,18 @@ class OrderService {
     String postZipCode = prefs.getString('postzip_code') ?? '';
     String addressLine1 = prefs.getString('address_line_1') ?? '';
     String addressLine2 = prefs.getString('address_line_2_optional') ?? '';
-
+    String email = prefs.getString('email') ?? '';
+ 
     // Retrieve total amount and shipping fee (can also be calculated here)
     double totalAmount = cartProvider.totalPrice(); // Replace with actual total amount if calculated elsewhere
-    double shippingFee = 230; // Replace with your actual shipping fee logic
+    double shippingFee = 0; // Replace with your actual shipping fee logic
 
     // Retrieve cart items
     List<Map<String, String>> items = cartProvider.cart.map((item) {
       return {
         'item': item.title,
         'item_price': item.price.toString(),
+        'item_size': item.size, 
       };
     }).toList();
 
@@ -51,6 +53,7 @@ class OrderService {
         'postzip_code': postZipCode,
         'address_line_1': addressLine1,
         'address_line_2_optional': addressLine2,
+        'email': email,
         'items': items,
       },
     };
