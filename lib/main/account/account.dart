@@ -6,6 +6,7 @@ import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/main/account/check_out_info.dart';
 import 'package:piloolo/main/account/contact_us.dart';
 import 'package:piloolo/main/account/favorite_page.dart';
+import 'package:piloolo/main/account/order_history.dart';
 import 'package:piloolo/pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -151,6 +152,10 @@ class ProfilePageState extends State<ProfilePage> {
                         title: const Text('My Orders'),
                         trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
                         onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
+                          );
                           // Handle navigation to Orders
                         },
                       ),
