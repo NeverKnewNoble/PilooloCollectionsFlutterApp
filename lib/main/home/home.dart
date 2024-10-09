@@ -53,32 +53,22 @@ class HomePageState extends State<HomePage> {
           automaticallyImplyLeading: false, // Removes the back arrow
 
           actions: [
-                 // Currency Dropdown
+            // Currency Display (Non-editable)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: DropdownButton<String>(
-                value: currency, // Use global currency variable
-                icon: const Icon(Icons.arrow_drop_down),
-                iconSize: 24,
-                underline: Container(), // Hide the underline
-                onChanged: (String? newCurrency) {
-                  setState(() {
-                    // Update the global currency and sign based on selection
-                    currency = newCurrency!;
-                    currencySign = getCurrencySign(newCurrency);
-                  });
-                },
-                items: currencies.map<DropdownMenuItem<String>>((String currencyOption) {
-                  return DropdownMenuItem<String>(
-                    value: currencyOption,
-                    child: Text(
-                      currencyOption,
-                      style: const TextStyle(color: Colors.black),
+              child: Row(
+                children: [
+                  Text(
+                    currency, // Display the global currency variable
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
                     ),
-                  );
-                }).toList(),
+                  ),
+                ],
               ),
             ),
+
             const ShoppingCartAction(), // Use the shopping cart action from the new file
           ],
         ),
