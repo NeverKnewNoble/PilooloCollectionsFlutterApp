@@ -6,7 +6,8 @@ import 'package:piloolo/main/home/widgets/search_bar.dart';
 import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
 import 'package:piloolo/frappe_api_calls/api_service.dart'; 
-import 'package:piloolo/components/currency.dart'; 
+import 'package:piloolo/components/currency.dart';
+import 'package:shared_preferences/shared_preferences.dart'; 
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,7 +24,17 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     futureProducts = ApiService().fetchProducts();
+    _loadCurrency(); // Load the updated currency when HomePage loads
   }
+
+  Future<void> _loadCurrency() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      currency = prefs.getString('currency') ?? 'USD'; // Default to USD if not set
+      currencySign = getCurrencySign(currency);
+    });
+  }
+
 
   Future<String> _convertPrice(double priceInUSD) async {
     // Call the function to get the converted price based on the selected currency

@@ -28,15 +28,8 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
     'Ghana': '+233',
     'USA': '+1',
     'UK': '+44',
-    'Canada': '+1',
   };
 
-  // // Map countries to currencies
-  // final Map<String, String> _countryCurrencyMap = {
-  //   'Ghana': 'GH₵',
-  //   'USA': 'USD',
-  //   'UK': 'GBP',
-  // };
 
   @override
   void initState() {
@@ -88,15 +81,34 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
     }
   }
 
+
   // Update the global currency and sign based on the selected country
-  void _updateCurrencyBasedOnCountry(String country) {
+  void _updateCurrencyBasedOnCountry(String country) async {
+    final prefs = await SharedPreferences.getInstance();
+    
     setState(() {
-      // updateCurrencyBasedOnLocation(country); 
-      currencySign = getCurrencySign(currency); // Update global currency sign
+      // Map country to its currency
+      switch (country) {
+        case 'Ghana':
+          currency = 'GH₵';
+          break;
+        case 'USA':
+          currency = 'USD';
+          break;
+        case 'UK':
+          currency = 'GBP';
+          break;
+        default:
+          currency = 'USD'; // Default to USD if no match
+      }
+
+      // Update the global currency sign based on the new currency
+      currencySign = getCurrencySign(currency);
+
+      // Save the updated currency to SharedPreferences
+      prefs.setString('currency', currency);
     });
   }
-
-
 
 
   @override
