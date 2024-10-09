@@ -131,7 +131,7 @@ class CartPageState extends State<CartPage> {
                                   // Quantity Control
                                   Container(
                                     height: 40,
-                                    width: 80,
+                                    width: 82,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color: const Color.fromARGB(255, 255, 181, 181),
@@ -140,7 +140,7 @@ class CartPageState extends State<CartPage> {
                                     child: Row(
                                       children: [
                                         buildQuantityControl(Icons.remove, index),
-                                        const SizedBox(width: 10),
+                                        const SizedBox(width: 11),
                                         Text(
                                           '${item.quantity}', // String interpolation for quantity
                                           style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),

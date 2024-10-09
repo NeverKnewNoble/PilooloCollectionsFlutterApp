@@ -42,7 +42,7 @@ class HomePageState extends State<HomePage> {
           automaticallyImplyLeading: false, // Removes the back arrow
 
           actions: [
-            // Currency Dropdown
+                 // Currency Dropdown
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: DropdownButton<String>(

@@ -20,35 +20,44 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  String _selectedSize = ''; // To store the selected size
+  String _selectedSize = '';
   int quantity = 1;
 
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
-    
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: const BackButton(color: Colors.black), // Ensure back button is visible
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: const BackButton(color: Colors.black),
         actions: const [
-          ShoppingCartAction(), // Use the shopping cart action from the new file
+          ShoppingCartAction(),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Image section
+            // Image Section
             SizedBox(
               height: 400,
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20), // Rounded corners
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 5,
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
                   image: DecorationImage(
-                    image: NetworkImage(widget.imagePath), // Change to NetworkImage to display network image
+                    image: NetworkImage(widget.imagePath),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -60,41 +69,43 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Product title
+                  // Product Title
                   Text(
                     widget.title,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
 
-                  // In-stock text
+                  // In-stock Text
                   const Text(
                     'In Stock',
-                    style: TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // Size selection
-                  const Text(
-                    'Size',
                     style: TextStyle(
                       fontSize: 18,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
 
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
 
-                  // Size buttons container
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5), // Rounded edges
-                      border: Border.all(color: Colors.grey.shade300), // Border color
+                  // Size Selection
+                  const Text(
+                    'Select Size',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
                     padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: ['S', 'M', 'L', 'XL', 'XXL'].map((size) {
@@ -103,20 +114,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           isSelected: _selectedSize == size,
                           onTap: () {
                             setState(() {
-                              _selectedSize = size; // Assign selected size to variable
+                              _selectedSize = size;
                             });
                           },
                         );
                       }).toList(),
                     ),
                   ),
+
                   const SizedBox(height: 16),
 
-                  // Quantity control
+                  // Quantity Control
                   const Text(
                     'Quantity',
                     style: TextStyle(
                       fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -124,14 +137,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                   const SizedBox(height: 32),
 
-                  // Price & Add to Cart button
+                  // Price & Add to Cart Button
                   Container(
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 255, 181, 181),
-                      borderRadius: BorderRadius.circular(30), // Rounded corners
-                      border: Border.all(color: Colors.grey.shade300), // Optional border color
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          spreadRadius: 5,
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
                     ),
-                    padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
                         const Text(
@@ -143,7 +163,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          widget.price, // Use the dynamic currency sign
+                          widget.price,
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -153,7 +173,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         const Spacer(),
                         ElevatedButton(
                           onPressed: () {
-                            // Check if size is selected
                             if (_selectedSize.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -165,18 +184,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 ),
                               );
                             } else {
-                              // Correctly add full image URL to the cart
                               cartProvider.addItem(CartItem(
-                                image: widget.imagePath, // Use full URL image
-                                title: widget.title, // Use the title passed to the details screen
+                                image: widget.imagePath,
+                                title: widget.title,
                                 price: double.parse(
-                                  widget.price.replaceAll(RegExp(r'[^\d.]'), ''), // Remove any non-numeric characters before parsing
+                                  widget.price.replaceAll(RegExp(r'[^\d.]'), ''),
                                 ),
                                 size: _selectedSize,
                                 quantity: quantity,
                               ));
 
-                              // Show success message
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
@@ -189,20 +206,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black, // Change button color here
-                            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                            backgroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                           ),
                           child: const Text(
-                            'Add to cart',
+                            'Add to Cart',
                             style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -215,14 +236,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   // Build quantity control widget
   Widget buildQuantityControl() {
     return Container(
-      width: 90,
+      width: 110,
       decoration: BoxDecoration(
-        color: Colors.white, // Background color for the container
-        borderRadius: BorderRadius.circular(10), // Rounded corners
-        border: Border.all(color: Colors.grey.shade300), // Optional border color
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            spreadRadius: 5,
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8), // Padding inside the container
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GestureDetector(
             onTap: () {
@@ -255,6 +285,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 }
 
+// Size button widget
 class _SizeButton extends StatelessWidget {
   final String size;
   final bool isSelected;
@@ -271,15 +302,16 @@ class _SizeButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? Colors.red : const Color.fromARGB(255, 255, 181, 181), // Change color based on selection
+        backgroundColor: isSelected ? Colors.red : const Color.fromARGB(255, 255, 181, 181),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5), // Rounded corners
+          borderRadius: BorderRadius.circular(10),
         ),
+        elevation: isSelected ? 5 : 0,
       ),
       child: Text(
         size,
-        style: TextStyle(color: isSelected ? Colors.white : Colors.black), // Text color changes on selection
+        style: TextStyle(color: isSelected ? Colors.white : Colors.black, fontWeight: FontWeight.bold),
       ),
     );
   }

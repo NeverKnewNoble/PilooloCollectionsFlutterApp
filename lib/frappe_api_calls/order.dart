@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:piloolo/components/currency.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/frappe_api_calls/ulr_base.dart'; 
@@ -24,6 +25,7 @@ class OrderService {
     String addressLine1 = prefs.getString('address_line_1') ?? '';
     String addressLine2 = prefs.getString('address_line_2_optional') ?? '';
     String email = prefs.getString('email') ?? '';
+  
  
     // Retrieve total amount and shipping fee (can also be calculated here)
     double totalAmount = cartProvider.totalPrice(); // Replace with actual total amount if calculated elsewhere
@@ -55,6 +57,7 @@ class OrderService {
         'address_line_1': addressLine1,
         'address_line_2_optional': addressLine2,
         'email': email,
+        'currency': currency,
         'items': items,
       },
     };

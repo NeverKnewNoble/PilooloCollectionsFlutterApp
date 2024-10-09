@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:piloolo/components/currency.dart'; // Import currency utility
 
 class CheckOutInfoPage extends StatefulWidget {
   const CheckOutInfoPage({super.key});
@@ -13,7 +14,7 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
   String? _selectedCountry = 'Ghana';
   String _phonePrefix = '+233';
 
-  final TextEditingController _emailController = TextEditingController(); // Added email controller
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -23,7 +24,6 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
   final TextEditingController _address2Controller = TextEditingController();
   final TextEditingController _stateProvinceController = TextEditingController();
 
-  // Countries and their respective phone prefixes
   final Map<String, String> _countryPhonePrefixes = {
     'Ghana': '+233',
     'USA': '+1',
@@ -31,13 +31,19 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
     'Canada': '+1',
   };
 
+  // // Map countries to currencies
+  // final Map<String, String> _countryCurrencyMap = {
+  //   'Ghana': 'GH₵',
+  //   'USA': 'USD',
+  //   'UK': 'GBP',
+  // };
+
   @override
   void initState() {
     super.initState();
-    loadLocalData(); // Load saved data when initializing the page
+    loadLocalData();
   }
 
-  // Load data from local storage
   Future<void> loadLocalData() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -45,7 +51,7 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
       setState(() {
         _selectedCountry = prefs.getString('location') ?? 'Ghana';
         _phonePrefix = _countryPhonePrefixes[_selectedCountry!]!;
-        _emailController.text = prefs.getString('email') ?? ''; // Load email
+        _emailController.text = prefs.getString('email') ?? '';
         _firstNameController.text = prefs.getString('first_name') ?? '';
         _lastNameController.text = prefs.getString('last_name') ?? '';
         _phoneController.text = prefs.getString('phone_number')?.replaceFirst(_phonePrefix, '') ?? '';
@@ -54,16 +60,18 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
         _zipCodeController.text = prefs.getString('postzip_code') ?? '';
         _address1Controller.text = prefs.getString('address_line_1') ?? '';
         _address2Controller.text = prefs.getString('address_line_2_optional') ?? '';
+
+        _updateCurrencyBasedOnCountry(_selectedCountry!); // Update currency based on country
       });
     }
   }
 
-  // Save data locally in the app
   Future<void> saveLocalData() async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('location', _selectedCountry!);
-    await prefs.setString('email', _emailController.text); // Save email
+
+    await prefs.setString('email', _emailController.text);
     await prefs.setString('first_name', _firstNameController.text);
     await prefs.setString('last_name', _lastNameController.text);
     await prefs.setString('phone_number', '$_phonePrefix${_phoneController.text}');
@@ -75,26 +83,32 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data saved')),
+        const SnackBar(content: Text('Data saved successfully!')),
       );
     }
   }
 
-  bool isNewDocument() {
-    // Replace this logic with how you determine if the document is new or existing
-    return true; // Return true for new documents
+  // Update the global currency and sign based on the selected country
+  void _updateCurrencyBasedOnCountry(String country) {
+    setState(() {
+      // updateCurrencyBasedOnLocation(country); 
+      currencySign = getCurrencySign(currency); // Update global currency sign
+    });
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text(
           'Shipping Address',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
@@ -104,188 +118,73 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
           key: _formKey,
           child: ListView(
             children: [
-              const SizedBox(height: 4),
+              const SizedBox(height: 10),
               // Email Field
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!RegExp(
-                          r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
-                      .hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-              ),
+              _buildTextField(_emailController, 'Email', TextInputType.emailAddress,
+                  'Please enter a valid email', Icons.email),
               const SizedBox(height: 16),
+
               // Location Dropdown
-              DropdownButtonFormField<String>(
-                value: _selectedCountry,
-                items: _countryPhonePrefixes.keys.map((String country) {
-                  return DropdownMenuItem(
-                    value: country,
-                    child: Text(country),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(
-                  labelText: 'Location',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedCountry = newValue;
-                    _phonePrefix = _countryPhonePrefixes[newValue!]!;
-                  });
-                },
-              ),
+              _buildDropdownField(),
               const SizedBox(height: 16),
-              // First Name
-              TextFormField(
-                controller: _firstNameController,
-                decoration: const InputDecoration(
-                  labelText: 'First Name',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your first name';
-                  }
-                  return null;
-                },
-              ),
+
+              // First Name Field
+              _buildTextField(_firstNameController, 'First Name', TextInputType.text,
+                  'Please enter your first name', Icons.person),
               const SizedBox(height: 16),
-              // Last Name
-              TextFormField(
-                controller: _lastNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Last Name',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your last name';
-                  }
-                  return null;
-                },
-              ),
+
+              // Last Name Field
+              _buildTextField(_lastNameController, 'Last Name', TextInputType.text,
+                  'Please enter your last name', Icons.person_outline),
               const SizedBox(height: 16),
-              // Phone Number
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(_phonePrefix),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _phoneController,
-                      decoration: const InputDecoration(
-                        labelText: 'Phone Number',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.phone,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your phone number';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
+
+              // Phone Number Field
+              _buildPhoneField(),
               const SizedBox(height: 16),
-              // City
-              TextFormField(
-                controller: _cityController,
-                decoration: const InputDecoration(
-                  labelText: 'City',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your city';
-                  }
-                  return null;
-                },
-              ),
+
+              // City Field
+              _buildTextField(_cityController, 'City', TextInputType.text,
+                  'Please enter your city', Icons.location_city),
               const SizedBox(height: 16),
-              // State/Province (Optional)
-              TextFormField(
-                controller: _stateProvinceController,
-                decoration: const InputDecoration(
-                  labelText: 'State/Province (Optional)',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+
+              // State/Province Field (Optional)
+              _buildTextField(_stateProvinceController, 'State/Province (Optional)', TextInputType.text,
+                  null, Icons.location_on),
               const SizedBox(height: 16),
-              // Post/Zip Code
-              TextFormField(
-                controller: _zipCodeController,
-                decoration: const InputDecoration(
-                  labelText: 'Post/Zip Code',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your post/zip code';
-                  }
-                  return null;
-                },
-              ),
+
+              // Post/Zip Code Field
+              _buildTextField(_zipCodeController, 'Post/Zip Code', TextInputType.number,
+                  'Please enter your post/zip code', Icons.local_post_office),
               const SizedBox(height: 16),
-              // Address Line 1
-              TextFormField(
-                controller: _address1Controller,
-                decoration: const InputDecoration(
-                  labelText: 'Address Line 1',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your address';
-                  }
-                  return null;
-                },
-              ),
+
+              // Address Line 1 Field
+              _buildTextField(_address1Controller, 'Address Line 1', TextInputType.streetAddress,
+                  'Please enter your address', Icons.home),
               const SizedBox(height: 16),
-              // Address Line 2 (Optional)
-              TextFormField(
-                controller: _address2Controller,
-                decoration: const InputDecoration(
-                  labelText: 'Address Line 2 (Optional)',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
+
+              // Address Line 2 Field (Optional)
+              _buildTextField(_address2Controller, 'Address Line 2 (Optional)', TextInputType.streetAddress,
+                  null, Icons.home_outlined),
+              const SizedBox(height: 32),
+
               // Save Button
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    saveLocalData(); // Save data locally in the app
+                    saveLocalData();
                   }
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 55),
                   backgroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
                 ),
                 child: const Text(
                   'Save',
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
@@ -294,6 +193,90 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
           ),
         ),
       ),
+    );
+  }
+
+  // Helper method for building text fields
+  Widget _buildTextField(TextEditingController controller, String labelText, TextInputType inputType, String? validationMsg, IconData icon) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: Icon(icon, color: Colors.grey),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+      keyboardType: inputType,
+      validator: (value) {
+        if (validationMsg != null && (value == null || value.isEmpty)) {
+          return validationMsg;
+        }
+        return null;
+      },
+    );
+  }
+
+  // Helper method for building the phone field
+  Widget _buildPhoneField() {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(_phonePrefix, style: const TextStyle(fontSize: 16)),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: TextFormField(
+            controller: _phoneController,
+            decoration: InputDecoration(
+              labelText: 'Phone Number',
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
+              filled: true,
+              fillColor: Colors.white,
+            ),
+            keyboardType: TextInputType.phone,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your phone number';
+              }
+              return null;
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Helper method for building the dropdown field
+  Widget _buildDropdownField() {
+    return DropdownButtonFormField<String>(
+      value: _selectedCountry,
+      items: _countryPhonePrefixes.keys.map((String country) {
+        return DropdownMenuItem(
+          value: country,
+          child: Text(country),
+        );
+      }).toList(),
+      decoration: InputDecoration(
+        labelText: 'Location',
+        prefixIcon: const Icon(Icons.location_on, color: Colors.grey),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          _selectedCountry = newValue;
+          _phonePrefix = _countryPhonePrefixes[newValue!]!;
+          _updateCurrencyBasedOnCountry(newValue); // Update the currency based on selected country
+        });
+      },
     );
   }
 }

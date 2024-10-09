@@ -22,6 +22,7 @@ String getCurrencySign(String currency) {
 }
 
 
+
 // Function to get the conversion rate from USD to the desired currency
 Future<double> getConversionRate(String targetCurrency) async {
   // Map GH₵ to GHS for API consistency
