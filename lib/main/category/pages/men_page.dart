@@ -7,6 +7,7 @@ import 'package:piloolo/components/displays_items.dart';
 import 'package:piloolo/frappe_api_calls/all_men_cloth.dart';
 import 'package:piloolo/frappe_api_calls/ulr_base.dart'; 
 import 'package:piloolo/components/currency.dart';
+import 'package:shimmer/shimmer.dart';  // Import shimmer package
 
 class MenPage extends StatefulWidget {
   const MenPage({super.key});
@@ -45,6 +46,35 @@ class MenPageState extends State<MenPage> {
     futureProducts = ApiService().fetchProducts();
   }
 
+  Widget _buildShimmerGrid() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16.0,
+        mainAxisSpacing: 16.0,
+        childAspectRatio: 0.6,
+      ),
+      itemCount: 6, // Show 6 shimmer items
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            height: 200,
+            width: 150,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
@@ -58,7 +88,6 @@ class MenPageState extends State<MenPage> {
             return IconButton(
               icon: const Icon(Icons.menu, color: Colors.black), // Add a menu icon
               onPressed: () {
-                // Open the drawer
                 Scaffold.of(context).openDrawer();
               },
             );
@@ -85,7 +114,6 @@ class MenPageState extends State<MenPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Align the category text to the top-left
                     Text(
                       _selectedCategory, // Display the current selected category
                       style: const TextStyle(
@@ -94,7 +122,6 @@ class MenPageState extends State<MenPage> {
                         color: Color.fromARGB(255, 255, 147, 147),
                       ),
                     ),
-                    // Add some spacing between the text and grid
                     const SizedBox(height: 20),
                     // Grid of Products
                     Expanded(
@@ -102,16 +129,14 @@ class MenPageState extends State<MenPage> {
                         future: futureProducts,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
+                            return _buildShimmerGrid();  // Show shimmer while loading
                           } else if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return const Center(child: Text('No items yet'));
                           } else {
-                            // Display the list of products
                             final products = snapshot.data!;
 
-                            // Filter products based on category and price range
                             final filteredProducts = products.where((product) {
                               final price = double.tryParse(product.price.toString()) ?? 0.0;
                               final matchesCategory = _selectedCategory == 'All' || product.customMenCategory == _selectedCategory;
@@ -119,7 +144,6 @@ class MenPageState extends State<MenPage> {
                               return matchesCategory && matchesPrice;
                             }).toList();
 
-                            // Check if the filtered list is empty
                             if (filteredProducts.isEmpty) {
                               return const Center(
                                 child: Text(
@@ -129,39 +153,37 @@ class MenPageState extends State<MenPage> {
                               );
                             }
 
-                            // Display grid of filtered products
                             return GridView.builder(
                               shrinkWrap: true,
-                              physics: const BouncingScrollPhysics(), // Allow grid to scroll independently
+                              physics: const BouncingScrollPhysics(),
                               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 16.0,
                                 mainAxisSpacing: 16.0,
                                 childAspectRatio: 0.6,
                               ),
-                              itemCount: filteredProducts.length, // Use length of filtered products
+                              itemCount: filteredProducts.length,
                               itemBuilder: (context, index) {
                                 final product = filteredProducts[index];
-                                final priceInDouble = double.tryParse(product.price.toString()) ?? 0.0; // Convert price to double
+                                final priceInDouble = double.tryParse(product.price.toString()) ?? 0.0;
                                 final fullImageUrl = product.imagePath.startsWith('http')
                                     ? product.imagePath
                                     : '$baseUrl${product.imagePath}';
 
-                                // Use FutureBuilder to get converted price
                                 return FutureBuilder<String>(
                                   future: _convertPrice(priceInDouble),
                                   builder: (context, priceSnapshot) {
-                                    if (priceSnapshot.connectionState == ConnectionState.waiting) {
-                                      return const CircularProgressIndicator();
-                                    } else if (priceSnapshot.hasError) {
-                                      return Text('Error: ${priceSnapshot.error}');
-                                    } else {
-                                      return ProductCard(
-                                        imagePath: fullImageUrl, // Ensure full URL for images
-                                        title: product.title,
-                                        price: '$currencySign${priceSnapshot.data}', // Use converted price
-                                      );
+                                    String priceText = 'Loading...';
+
+                                    if (priceSnapshot.connectionState == ConnectionState.done && priceSnapshot.hasData) {
+                                      priceText = '$currencySign${priceSnapshot.data}';
                                     }
+
+                                    return ProductCard(
+                                      imagePath: fullImageUrl,
+                                      title: product.title,
+                                      price: priceText,
+                                    );
                                   },
                                 );
                               },

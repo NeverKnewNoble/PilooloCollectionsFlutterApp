@@ -5,9 +5,10 @@ import 'package:piloolo/main/home/widgets/image_slider.dart';
 import 'package:piloolo/main/home/widgets/search_bar.dart';
 import 'package:piloolo/components/pagebar.dart';
 import 'package:piloolo/components/shopping_cart_action.dart';
-import 'package:piloolo/frappe_api_calls/api_service.dart'; 
+import 'package:piloolo/frappe_api_calls/api_service.dart';
 import 'package:piloolo/components/currency.dart';
-import 'package:shared_preferences/shared_preferences.dart'; 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart'; // Shimmer package
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,10 +36,81 @@ class HomePageState extends State<HomePage> {
     });
   }
 
-
   Future<String> _convertPrice(double priceInUSD) async {
     // Call the function to get the converted price based on the selected currency
     return await calculatePrice(priceInUSD, currency);
+  }
+
+  // Function to build the shimmer loading effect for a grid
+  Widget _buildShimmerLoadingGrid() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16.0,
+        mainAxisSpacing: 16.0,
+        childAspectRatio: 0.6,
+      ),
+      itemCount: 6, // Number of shimmer items to display
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            height: 200,
+            width: 150,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+          ),
+        );
+      },
+    );
+  }
+
+  // Function to handle errors and show a retry button
+  Widget _buildErrorWidget(String errorMessage) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.error_outline, size: 48, color: Colors.red),
+          const SizedBox(height: 16),
+          Text('Something went wrong', style: TextStyle(fontSize: 18, color: Colors.red)),
+          const SizedBox(height: 8),
+          Text(errorMessage, style: const TextStyle(fontSize: 14)),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                futureProducts = ApiService().fetchProducts(); // Retry fetching products
+              });
+            },
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Function to display when no products are found
+  Widget _buildNoProductsFound() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Icon(Icons.info_outline, size: 48, color: Colors.blue),
+          SizedBox(height: 16),
+          Text(
+            'No products found',
+            style: TextStyle(fontSize: 18, color: Colors.black),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -51,7 +123,6 @@ class HomePageState extends State<HomePage> {
           backgroundColor: Colors.white,
           elevation: 0,
           automaticallyImplyLeading: false, // Removes the back arrow
-
           actions: [
             // Currency Display (Non-editable)
             Padding(
@@ -68,7 +139,6 @@ class HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-
             const ShoppingCartAction(), // Use the shopping cart action from the new file
           ],
         ),
@@ -149,7 +219,7 @@ class HomePageState extends State<HomePage> {
               ),
 
               const SizedBox(height: 10),
-              
+
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
@@ -165,11 +235,14 @@ class HomePageState extends State<HomePage> {
                   future: futureProducts,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      // Show shimmer effect during loading
+                      return _buildShimmerLoadingGrid();
                     } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
+                      // Show error UI with retry button
+                      return _buildErrorWidget(snapshot.error.toString());
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No products found'));
+                      // Show "no products found" UI
+                      return _buildNoProductsFound();
                     } else {
                       // Display the list of products
                       final products = snapshot.data!;
@@ -190,18 +263,18 @@ class HomePageState extends State<HomePage> {
                           return FutureBuilder<String>(
                             future: _convertPrice(priceInDouble), // Convert the price
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const CircularProgressIndicator(); // Show loading
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                // Display product details with converted price
-                                return ProductCard(
-                                  imagePath: product.imagePath,
-                                  title: product.title,
-                                  price: '$currencySign${snapshot.data}', // Use converted price
-                                );
+                              String priceText = 'Loading...'; // Placeholder for price
+
+                              if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                                priceText = '$currencySign${snapshot.data}'; // Update with the converted price
                               }
+
+                              // Display product details with either "Loading..." or the converted price
+                              return ProductCard(
+                                imagePath: product.imagePath,
+                                title: product.title,
+                                price: priceText, // Show converted price or placeholder
+                              );
                             },
                           );
                         },

@@ -7,6 +7,7 @@ import 'package:piloolo/components/displays_items.dart';
 import 'package:piloolo/frappe_api_calls/all_women_cloth.dart';
 import 'package:piloolo/frappe_api_calls/ulr_base.dart';
 import 'package:piloolo/components/currency.dart';
+import 'package:shimmer/shimmer.dart';  // Import shimmer package
 
 class WomenPage extends StatefulWidget {
   const WomenPage({super.key});
@@ -20,14 +21,12 @@ class WomenPageState extends State<WomenPage> {
   double _minPrice = 0;
   double _maxPrice = 1000;
 
-  // Method to handle category selection
   void _handleCategoryTap(String category) {
     setState(() {
       _selectedCategory = category;
     });
   }
 
-  // Method to handle price range changes
   void _handlePriceRangeChange(double minPrice, double maxPrice) {
     setState(() {
       _minPrice = minPrice;
@@ -44,8 +43,37 @@ class WomenPageState extends State<WomenPage> {
   @override
   void initState() {
     super.initState();
-    // Fetch products when the page initializes
     futureProducts = ApiService().fetchProducts();
+  }
+
+  // Function to display shimmer loading effect
+  Widget _buildShimmerGrid() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16.0,
+        mainAxisSpacing: 16.0,
+        childAspectRatio: 0.6,
+      ),
+      itemCount: 6, // Show 6 shimmer items
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            height: 200,
+            width: 150,
+            margin: const EdgeInsets.symmetric(vertical: 8),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -88,7 +116,6 @@ class WomenPageState extends State<WomenPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Category title
                     Text(
                       _selectedCategory,
                       style: const TextStyle(
@@ -98,19 +125,17 @@ class WomenPageState extends State<WomenPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Products grid
                     Expanded(
                       child: FutureBuilder<List<Product>>(
                         future: futureProducts,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
+                            return _buildShimmerGrid();  // Show shimmer while loading
                           } else if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return const Center(child: Text('No products found'));
                           } else {
-                            // Filter products based on selected category and price range
                             final products = snapshot.data!.where((product) {
                               final price = double.tryParse(product.price) ?? 0.0;
                               final matchesCategory = _selectedCategory == 'All' || product.customCategory == _selectedCategory;
@@ -124,7 +149,6 @@ class WomenPageState extends State<WomenPage> {
                               );
                             }
 
-                            // Display the filtered products
                             return GridView.builder(
                               shrinkWrap: true,
                               physics: const BouncingScrollPhysics(),
@@ -145,17 +169,17 @@ class WomenPageState extends State<WomenPage> {
                                 return FutureBuilder<String>(
                                   future: _convertPrice(priceInDouble),
                                   builder: (context, priceSnapshot) {
-                                    if (priceSnapshot.connectionState == ConnectionState.waiting) {
-                                      return const CircularProgressIndicator();
-                                    } else if (priceSnapshot.hasError) {
-                                      return Text('Error: ${priceSnapshot.error}');
-                                    } else {
-                                      return ProductCard(
-                                        imagePath: fullImageUrl,
-                                        title: product.title,
-                                        price: '$currencySign${priceSnapshot.data}', // Display converted price
-                                      );
+                                    String priceText = 'Loading...'; // Placeholder for price
+
+                                    if (priceSnapshot.connectionState == ConnectionState.done && priceSnapshot.hasData) {
+                                      priceText = '$currencySign${priceSnapshot.data}'; // Update with the converted price
                                     }
+
+                                    return ProductCard(
+                                      imagePath: fullImageUrl,
+                                      title: product.title,
+                                      price: priceText, // Show converted price or placeholder
+                                    );
                                   },
                                 );
                               },

@@ -70,7 +70,7 @@ class _PaymentPageState extends State<PaymentPage> {
             children: [
               // Page Title
               const Text(
-                'Payment Methods',
+                'Payment',
                 style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black),
               ),
               const SizedBox(height: 20),
@@ -303,82 +303,85 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 60),
             ),
-            onPressed: () async {
-              // Generate a unique transaction reference immediately
-              final uniqueTransRef = PayWithPayStack().generateUuidV4();
+// In the button press event
+onPressed: () async {
+  // Generate a unique transaction reference immediately
+  final uniqueTransRef = PayWithPayStack().generateUuidV4();
 
-              try {
-                // Perform all async operations first, without using `context`
-                final orderService = OrderService();
-                await orderService.createOrder(context);  // Async operation: create order
+  try {
+    // Perform all async operations first, without using `context`
+    final orderService = OrderService();
+    await orderService.createOrder(context);  // Async operation: create order
 
-                // Ensure the widget is still mounted before proceeding
-                if (!mounted) return;
+    // Ensure the widget is still mounted before proceeding
+    if (!mounted) return;
 
-                // Ensure that the amount is converted to an integer
-                int totalAmountInCents = (total * 100).toInt();
+    // Ensure that the total amount is treated as a double and passed as is without string conversion.
+    // This is the amount you will pass to Paystack.
+    double exactAmount = total; // Use the exact double amount for processing
 
-                // Cast the integer amount to a double to meet Paystack's parameter requirement
-                double amountToPass = totalAmountInCents.toDouble();
+    // Now, perform the Paystack payment
+    PayWithPayStack().now(
+      context: context,
+      secretKey: "sk_test_df8dd769c39dd807c2db732ab1b5c98e66643288", // Your secret key
+      customerEmail: "micgraphjosh@gmail.com", // Replace with dynamic user email if needed
+      reference: uniqueTransRef,
+      paymentChannel: ["mobile_money", "card"],
+      currency: currency, // Use the correct global currency (e.g., GHS)
+      amount: exactAmount, // Pass the double amount to Paystack
+      callbackUrl: "https://example.com/callback", // Dummy callback URL
+      transactionCompleted: () {
+        if (!mounted) return;
 
-                // Now, perform the Paystack payment
-                PayWithPayStack().now(
-                  context: context,
-                  secretKey: "sk_live_b94aa2b4d378b3c86d3183c3ed7131a5945dd3ee", // Your secret key
-                  customerEmail: "micgraphjosh@gmail.com", // Replace with dynamic user email if needed
-                  reference: uniqueTransRef,
-                  currency: currency, // Use the correct global currency
-                  amount: amountToPass, // Paystack expects a double, but we pass a whole number as a double
-                  callbackUrl: "https://example.com/callback", // Dummy callback URL
-                  transactionCompleted: () {
-                    if (!mounted) return;
-
-                    // Payment was successful, navigate to success page
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SuccessAnimation(
-                          onComplete: () {
-                            // Navigate to homepage after success
-                            Navigator.pushNamedAndRemoveUntil(
-                              context, 'HomePage', (route) => false);
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                  transactionNotCompleted: () {
-                    if (!mounted) return;
-
-                    // Payment failed, navigate to failure page
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const PaymentFailedPage()),
-                    );
-                  },
-                );
-              } catch (e) {
-                if (kDebugMode) {
-                  print('Error processing payment: $e');
-                }
-
-                // Ensure the widget is still mounted before showing the error
-                if (!mounted) return;
-
-                // Handle error by showing a Snackbar or dialog
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Error processing payment. Please try again.')),
-                );
-              }
-            },
-            child: Text(
-              "Submit Order ($currencySign${total.toStringAsFixed(2)})",
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: Colors.white,
-              ),
+        // Payment was successful, navigate to success page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => SuccessAnimation(
+              onComplete: () {
+                // Navigate to homepage after success
+                Navigator.pushNamedAndRemoveUntil(
+                  context, 'HomePage', (route) => false);
+              },
             ),
+          ),
+        );
+      },
+      transactionNotCompleted: () {
+        if (!mounted) return;
+
+        // Payment failed, navigate to failure page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const PaymentFailedPage()),
+        );
+      },
+    );
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error processing payment: $e');
+    }
+
+    // Ensure the widget is still mounted before showing the error
+    if (!mounted) return;
+
+    // Handle error by showing a Snackbar or dialog
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Error processing payment. Please try again.')),
+    );
+  }
+},
+
+// For displaying the amount in the UI
+child: Text(
+  "Submit Order ($currencySign${total.toStringAsFixed(2)})", // This is just for display purposes
+  style: const TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 18,
+    color: Colors.white,
+  ),
+),
+
           ),
 
 
