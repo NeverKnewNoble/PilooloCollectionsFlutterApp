@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pay_with_paystack/pay_with_paystack.dart';
 import 'package:piloolo/frappe_api_calls/order.dart';
+import 'package:piloolo/main/cart/widget/payment_failed.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
 import 'package:piloolo/main/cart/widget/success_animation.dart'; 
@@ -26,7 +29,7 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   bool _payWithCard = false;
   bool _payWithMoMo = false;
-  bool _showAnimation = false; // To control animation
+  final bool _showAnimation = false; // To control animation
 
   // Mock shipping fee, VAT, and checkout information (replace with real data)
   final double shippingFee = 5.00;
@@ -72,39 +75,39 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
               const SizedBox(height: 20),
 
-              // Card Option
-              buildPaymentOption(
-                title: 'Pay with Card',
-                isSelected: _payWithCard,
-                onTap: () {
-                  setState(() {
-                    _payWithCard = true;
-                    _payWithMoMo = false;
-                  });
-                },
-                icon: Icons.credit_card,
-              ),
+              // // Card Option
+              // buildPaymentOption(
+              //   title: 'Pay with Card',
+              //   isSelected: _payWithCard,
+              //   onTap: () {
+              //     setState(() {
+              //       _payWithCard = true;
+              //       _payWithMoMo = false;
+              //     });
+              //   },
+              //   icon: Icons.credit_card,
+              // ),
 
-              // Card Details Form (only if card option is selected)
-              if (_payWithCard) buildCardDetailsForm(),
+              // // Card Details Form (only if card option is selected)
+              // if (_payWithCard) buildCardDetailsForm(),
 
-              const SizedBox(height: 10),
+              // const SizedBox(height: 10),
 
-              // Paystack (MoMo) Option
-              buildPaymentOption(
-                title: 'Paystack (MoMo)',
-                isSelected: _payWithMoMo,
-                onTap: () {
-                  setState(() {
-                    _payWithMoMo = true;
-                    _payWithCard = false;
-                  });
-                },
-                icon: Icons.mobile_friendly,
-              ),
+              // // Paystack (MoMo) Option
+              // buildPaymentOption(
+              //   title: 'Paystack (MoMo)',
+              //   isSelected: _payWithMoMo,
+              //   onTap: () {
+              //     setState(() {
+              //       _payWithMoMo = true;
+              //       _payWithCard = true;
+              //     });
+              //   },
+              //   icon: Icons.mobile_friendly,
+              // ),
 
-              if (_payWithMoMo)
-                buildPaystackButton(),
+              // if (_payWithMoMo)
+              //   buildPaystackButton(),
 
               const SizedBox(height: 20),
 
@@ -296,25 +299,94 @@ class _PaymentPageState extends State<PaymentPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(50),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 50),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 60),
             ),
             onPressed: () async {
-              // Call the API to create the order
-              final orderService = OrderService();
-              await orderService.createOrder(context);
+              // Generate a unique transaction reference immediately
+              final uniqueTransRef = PayWithPayStack().generateUuidV4();
 
-              // Trigger the animation
-              setState(() {
-                _showAnimation = true;
-              });
+              try {
+                // Perform all async operations first, without using `context`
+                final orderService = OrderService();
+                await orderService.createOrder(context);  // Async operation: create order
+
+                // Ensure the widget is still mounted before proceeding
+                if (!mounted) return;
+
+                // Ensure that the amount is converted to an integer
+                int totalAmountInCents = (total * 100).toInt();
+
+                // Cast the integer amount to a double to meet Paystack's parameter requirement
+                double amountToPass = totalAmountInCents.toDouble();
+
+                // Now, perform the Paystack payment
+                PayWithPayStack().now(
+                  context: context,
+                  secretKey: "sk_live_b94aa2b4d378b3c86d3183c3ed7131a5945dd3ee", // Your secret key
+                  customerEmail: "micgraphjosh@gmail.com", // Replace with dynamic user email if needed
+                  reference: uniqueTransRef,
+                  currency: currency, // Use the correct global currency
+                  amount: amountToPass, // Paystack expects a double, but we pass a whole number as a double
+                  callbackUrl: "https://example.com/callback", // Dummy callback URL
+                  transactionCompleted: () {
+                    if (!mounted) return;
+
+                    // Payment was successful, navigate to success page
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SuccessAnimation(
+                          onComplete: () {
+                            // Navigate to homepage after success
+                            Navigator.pushNamedAndRemoveUntil(
+                              context, 'HomePage', (route) => false);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  transactionNotCompleted: () {
+                    if (!mounted) return;
+
+                    // Payment failed, navigate to failure page
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const PaymentFailedPage()),
+                    );
+                  },
+                );
+              } catch (e) {
+                if (kDebugMode) {
+                  print('Error processing payment: $e');
+                }
+
+                // Ensure the widget is still mounted before showing the error
+                if (!mounted) return;
+
+                // Handle error by showing a Snackbar or dialog
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Error processing payment. Please try again.')),
+                );
+              }
             },
             child: Text(
               "Submit Order ($currencySign${total.toStringAsFixed(2)})",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.white,
+              ),
             ),
-          )
+          ),
+
+
+
+
+
+
+
 
         ],
       ),

@@ -119,6 +119,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ElevatedButton(
               onPressed: () async {
                 final email = emailController.text.trim();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please wait, email being processed.')),
+                    );
 
                 // Check if email is valid before making the request
                 if (email.isEmpty || !email.contains('@')) {
@@ -135,7 +138,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 100.0),
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 110.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),

@@ -90,7 +90,7 @@ class _CheckOutInfoPageState extends State<CheckOutInfoPage> {
       // Map country to its currency
       switch (country) {
         case 'Ghana':
-          currency = 'GH₵';
+          currency = 'GHS';
           break;
         case 'USA':
           currency = 'USD';

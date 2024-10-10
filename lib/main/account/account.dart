@@ -25,24 +25,32 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    loadUserName(); // Load user's first name on init
+    loadUserData(); // Load user's data (name and image) on init
   }
 
-  // Method to load the user's first name from local storage
-  Future<void> loadUserName() async {
+  // Method to load the user's first name and profile image from local storage
+  Future<void> loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _firstName = prefs.getString('first_name') ?? 'Your Name'; // Default to "John Doe" if not found
+      _firstName = prefs.getString('first_name') ?? 'Your Name'; // Load user's first name
+      String? imagePath = prefs.getString('profile_image'); // Load the stored image path
+      if (imagePath != null) {
+        _image = File(imagePath); // Update the image file if path exists
+      }
     });
   }
 
-  // Method to pick an image
+  // Method to pick an image and save its path locally
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path); // Update the selected image
       });
+
+      // Save the image path to local storage
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('profile_image', pickedFile.path);
     }
   }
 

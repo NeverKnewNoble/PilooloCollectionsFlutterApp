@@ -5,14 +5,14 @@ String currency = 'USD';
 String currencySign = '\$';
 
 // List of available currency options
-final List<String> currencies = ['USD', 'GH₵', 'GBP'];
+final List<String> currencies = ['USD', 'GHS', 'GBP'];
 
 // Function to get the currency sign based on the selected currency
 String getCurrencySign(String currency) {
   switch (currency) {
     case 'USD':
       return '\$';
-    case 'GH₵':
+    case 'GHS':
       return '₵';
     case 'GBP':
       return '£';
@@ -26,7 +26,7 @@ String getCurrencySign(String currency) {
 // Function to get the conversion rate from USD to the desired currency
 Future<double> getConversionRate(String targetCurrency) async {
   // Map GH₵ to GHS for API consistency
-  String mappedCurrency = targetCurrency == 'GH₵' ? 'GHS' : targetCurrency;
+  String mappedCurrency = targetCurrency == 'GHS' ? 'GHS' : targetCurrency;
 
   // Your API endpoint with access key
   final url = Uri.parse('https://api.exchangerate.host/live?access_key=34be58c102a04e22cf0bee4b094bdaff&currencies=GBP,GHS');

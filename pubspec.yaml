@@ -51,6 +51,8 @@ dependencies:
   shared_preferences: ^2.3.2
   url_launcher: ^6.3.0
   image_picker: ^1.1.2
+  pay_with_paystack: ^1.0.10
+  webview_flutter: ^4.0.0 
   # flutter_paystack: ^1.0.5+1
 
 dev_dependencies:

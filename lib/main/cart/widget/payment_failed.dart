@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-class SuccessAnimation extends StatefulWidget {
-  final VoidCallback onComplete;
-
-  const SuccessAnimation({super.key, required this.onComplete});
+class PaymentFailedPage extends StatefulWidget {
+  const PaymentFailedPage({super.key});
 
   @override
-  SuccessAnimationState createState() => SuccessAnimationState();
+  State<PaymentFailedPage> createState() => _PaymentFailedPageState();
 }
 
-class SuccessAnimationState extends State<SuccessAnimation>
+class _PaymentFailedPageState extends State<PaymentFailedPage>
     with TickerProviderStateMixin {
-  bool _showCheckMark = false;
+  bool _showCrossMark = false;
   late AnimationController _controller;
 
   @override
@@ -27,13 +25,8 @@ class SuccessAnimationState extends State<SuccessAnimation>
     // Start animation with a delay
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
-        _showCheckMark = true;
+        _showCrossMark = true;
         _controller.forward(); // Start the scale animation
-      });
-
-      // Trigger onComplete after the animation ends
-      Future.delayed(const Duration(seconds: 2), () {
-        widget.onComplete();
       });
     });
   }
@@ -47,7 +40,7 @@ class SuccessAnimationState extends State<SuccessAnimation>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.greenAccent, // A more vibrant color
+      backgroundColor: Colors.redAccent, // A more vibrant red color
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -60,8 +53,8 @@ class SuccessAnimationState extends State<SuccessAnimation>
               ),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                width: _showCheckMark ? 150 : 55,
-                height: _showCheckMark ? 150 : 55,
+                width: _showCrossMark ? 150 : 55,
+                height: _showCrossMark ? 150 : 55,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
@@ -73,20 +66,20 @@ class SuccessAnimationState extends State<SuccessAnimation>
                     ),
                   ],
                 ),
-                child: _showCheckMark
-                    ? const Icon(Icons.check, color: Colors.green, size: 80)
+                child: _showCrossMark
+                    ? const Icon(Icons.close, color: Colors.red, size: 80)
                     : const CircularProgressIndicator(
                         color: Colors.white, strokeWidth: 6),
               ),
             ),
             const SizedBox(height: 20),
             AnimatedOpacity(
-              opacity: _showCheckMark ? 1 : 0,
+              opacity: _showCrossMark ? 1 : 0,
               duration: const Duration(milliseconds: 500),
               child: Column(
                 children: const [
                   Text(
-                    'Payment Successful',
+                    'Payment Failed',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -95,7 +88,7 @@ class SuccessAnimationState extends State<SuccessAnimation>
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Thank you for shopping with \nPiloolo Collections',
+                    'Something went wrong.\nPlease try again later.',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
