@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
 import 'package:piloolo/main/category/pages/men_page.dart';
 import 'package:piloolo/main/home/home.dart';
+import 'package:piloolo/main/cart/widget/success_animation.dart'; // Import your success animation page
 import 'package:provider/provider.dart';
-// import 'package:flutter_localizations/flutter_localizations.dart';
-
 
 void main() {
   runApp(
@@ -21,20 +20,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // locale: const Locale('en', 'US'), // Set your desired locale here
-      // supportedLocales: const [
-      //   Locale('en', 'US'), 
-      // ],
-      // localizationsDelegates: [
-      //   GlobalMaterialLocalizations.delegate,
-      //   GlobalWidgetsLocalizations.delegate,
-      // ],
       title: 'Piloolo',
       debugShowCheckedModeBanner: false,
-      home: const MenPage(),
-       routes: {
-        'HomePage': (context) => const HomePage(), // Define the route for the HomePage
-        // Add other routes if necessary
+      home: const MenPage(), // Keep MenPage as the home page
+      routes: {
+        'HomePage': (context) => const HomePage(), // Home page route
+        '/paymentSuccess': (context) => SuccessAnimation(
+              onComplete: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, 'HomePage', (route) => false);
+              },
+            ), // Add the route for the success animation
       },
     );
   }

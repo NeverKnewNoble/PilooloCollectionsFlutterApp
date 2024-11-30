@@ -27,7 +27,7 @@ class MySearchBARState extends State<MySearchBAR> {
   Widget build(BuildContext context) {
     return Container(
       height: 55,
-      width: 400,
+      width: 380,
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 181, 181),
         borderRadius: BorderRadius.circular(30),
@@ -35,11 +35,11 @@ class MySearchBARState extends State<MySearchBAR> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: Row(
         children: [
-          const Icon(
-            Icons.search,
-            color: Colors.white,
-            size: 30,
-          ),
+          // const Icon(
+          //   Icons.search,
+          //   color: Colors.white,
+          //   size: 30,
+          // ),
           const SizedBox(width: 10),
           Flexible(
             flex: 4,

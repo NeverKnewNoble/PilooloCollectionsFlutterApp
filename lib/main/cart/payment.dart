@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:pay_with_paystack/pay_with_paystack.dart';
+import 'package:flutter_paystack_max/flutter_paystack_max.dart';
 import 'package:piloolo/frappe_api_calls/order.dart';
-import 'package:piloolo/main/cart/widget/payment_failed.dart';
 import 'package:provider/provider.dart';
 import 'package:piloolo/main/cart/widget/cart_provider.dart';
-import 'package:piloolo/main/cart/widget/success_animation.dart'; 
+import 'package:piloolo/main/cart/widget/payment_failed.dart';
+// import 'package:piloolo/main/cart/widget/success_animation.dart';
 import 'package:piloolo/components/currency.dart';
+import 'package:uuid/uuid.dart';
 
 class PaymentPage extends StatefulWidget {
   final String location;
@@ -27,33 +28,12 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
-  bool _payWithCard = false;
-  bool _payWithMoMo = false;
-  final bool _showAnimation = false; // To control animation
-
-  // Mock shipping fee, VAT, and checkout information (replace with real data)
   final double shippingFee = 5.00;
   final double vatPercentage = 0.15; // 15% VAT
 
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
-
-    // Show the animation if _showAnimation is true
-    if (_showAnimation) {
-      return SuccessAnimation(
-        onComplete: () {
-          // Access the CartProvider instance
-          final cartProvider = Provider.of<CartProvider>(context, listen: false);
-          
-          // Clear the cart
-          cartProvider.clearCart();
-          
-          // Navigate back to HomePage
-          Navigator.pushNamedAndRemoveUntil(context, 'HomePage', (route) => false);
-        },
-      );
-    }
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -68,55 +48,13 @@ class _PaymentPageState extends State<PaymentPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Page Title
               const Text(
                 'Payment',
                 style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black),
               ),
               const SizedBox(height: 20),
-
-              // // Card Option
-              // buildPaymentOption(
-              //   title: 'Pay with Card',
-              //   isSelected: _payWithCard,
-              //   onTap: () {
-              //     setState(() {
-              //       _payWithCard = true;
-              //       _payWithMoMo = false;
-              //     });
-              //   },
-              //   icon: Icons.credit_card,
-              // ),
-
-              // // Card Details Form (only if card option is selected)
-              // if (_payWithCard) buildCardDetailsForm(),
-
-              // const SizedBox(height: 10),
-
-              // // Paystack (MoMo) Option
-              // buildPaymentOption(
-              //   title: 'Paystack (MoMo)',
-              //   isSelected: _payWithMoMo,
-              //   onTap: () {
-              //     setState(() {
-              //       _payWithMoMo = true;
-              //       _payWithCard = true;
-              //     });
-              //   },
-              //   icon: Icons.mobile_friendly,
-              // ),
-
-              // if (_payWithMoMo)
-              //   buildPaystackButton(),
-
-              const SizedBox(height: 20),
-
-              // Display Checkout Info Section
               buildCheckoutInfoSection(),
-
               const SizedBox(height: 30),
-
-              // Checkout Box with Shipping Fee, VAT, and Submit Order button
               buildCheckOutBox(cartProvider),
             ],
           ),
@@ -125,123 +63,113 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  // Payment Option Selector
-  Widget buildPaymentOption({
-    required String title,
-    required bool isSelected,
-    required VoidCallback onTap,
-    required IconData icon,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.red[50] : Colors.white,
-          border: Border.all(color: isSelected ? Colors.red : Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: isSelected ? Colors.red : Colors.black, size: 30),
-            const SizedBox(width: 16),
-            Text(
-              title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isSelected ? Colors.red : Colors.black),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+void handlePaystackPayment(double total) async {
+  final cartProvider = Provider.of<CartProvider>(context, listen: false);
+  final transactionReference = Uuid().v4();
+  final int paystackAmount = (total * 100).toInt();
 
-  // Card Details Form Widget
-  Widget buildCardDetailsForm() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Column(
-        children: [
-          // Card Number
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Card Number',
-              prefixIcon: Icon(Icons.credit_card),
-              border: OutlineInputBorder(),
-            ),
-            keyboardType: TextInputType.number,
-          ),
-          const SizedBox(height: 10),
+  final request = PaystackTransactionRequest(
+    reference: transactionReference,
+    secretKey: "sk_test_df8dd769c39dd807c2db732ab1b5c98e66643288",
+    email: "user@example.com",
+    amount: paystackAmount.toDouble(),
+    currency: PaystackCurrency.ghs,
+    channel: [
+      PaystackPaymentChannel.mobileMoney,
+      PaystackPaymentChannel.card,
+    ],
+  );
 
-          // Expiry Date and CVV
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Expiry Date',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.datetime,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'CVV',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  try {
+    final initializedTransaction = await PaymentService.initializeTransaction(request);
 
-  // Paystack Button for MoMo Payment
-  Widget buildPaystackButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: ElevatedButton(
-        onPressed: () {
-          // Paystack MoMo logic here
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          elevation: 2,
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            side: BorderSide(color: Colors.grey.shade300),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(
-              'images/paystack.png',
-              width: 35,
-              height: 35,
-            ),
-            const SizedBox(width: 10),
-            const Text(
-              'Continue with Paystack',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+    if (!mounted) return;
+
+    if (!initializedTransaction.status) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(initializedTransaction.message),
+      ));
+      return;
+    }
+
+    final successUrl = Uri.parse('/paymentSuccess');
+    await PaymentService.showPaymentModal(
+      context,
+      callbackUrl: successUrl.toString(),
+      transaction: initializedTransaction,
+      onClosing: () async {
+        if (!mounted) return;
+
+        // Verify the transaction immediately after the modal closes
+        final verifiedResponse = await PaymentService.verifyTransaction(
+          initializedTransaction.data?.reference ?? transactionReference,
+          paystackSecretKey: "sk_test_df8dd769c39dd807c2db732ab1b5c98e66643288",
+        );
+
+        if (!mounted) return;
+
+        if (verifiedResponse.status) {
+          // Transaction successful
+          try {
+            final orderService = OrderService();
+            await orderService.createOrder(context);
+
+            if (!mounted) return;
+
+            cartProvider.clearCart();
+            Navigator.pushReplacementNamed(context, '/paymentSuccess');
+          } catch (e) {
+            if (kDebugMode) {
+              print('Error during order creation: $e');
+            }
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Order creation failed. Please try again.')),
+            );
+          }
+        } else {
+          // Transaction failed
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => PaymentFailedPage(
+                location: widget.location,
+                address: widget.address,
+                city: widget.city,
+                zipCode: widget.zipCode,
+                onRetry: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PaymentPage(
+                        location: widget.location,
+                        address: widget.address,
+                        city: widget.city,
+                        zipCode: widget.zipCode,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
+      },
+    );
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error processing payment: $e');
+    }
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Error processing payment. Please try again.')),
     );
   }
+}
 
-  // Display Checkout Information Section
+
   Widget buildCheckoutInfoSection() {
     return Container(
       width: double.infinity,
@@ -268,7 +196,6 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  // Checkout Box Widget
   Widget buildCheckOutBox(CartProvider cartProvider) {
     final subtotal = cartProvider.totalPrice();
     final vatAmount = subtotal * vatPercentage;
@@ -293,8 +220,6 @@ class _PaymentPageState extends State<PaymentPage> {
           const Divider(height: 30, thickness: 1),
           buildSummaryRow("Order Total (VAT Included)", total, isTotal: true),
           const SizedBox(height: 20),
-
-          // Submit Order Button
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
@@ -303,100 +228,25 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 60),
             ),
-// In the button press event
-onPressed: () async {
-  // Generate a unique transaction reference immediately
-  final uniqueTransRef = PayWithPayStack().generateUuidV4();
-
-  try {
-    // Perform all async operations first, without using `context`
-    final orderService = OrderService();
-    await orderService.createOrder(context);  // Async operation: create order
-
-    // Ensure the widget is still mounted before proceeding
-    if (!mounted) return;
-
-    // Ensure that the total amount is treated as a double and passed as is without string conversion.
-    // This is the amount you will pass to Paystack.
-    double exactAmount = total; // Use the exact double amount for processing
-
-    // Now, perform the Paystack payment
-    PayWithPayStack().now(
-      context: context,
-      secretKey: "sk_test_df8dd769c39dd807c2db732ab1b5c98e66643288", // Your secret key
-      customerEmail: "micgraphjosh@gmail.com", // Replace with dynamic user email if needed
-      reference: uniqueTransRef,
-      paymentChannel: ["mobile_money", "card"],
-      currency: currency, // Use the correct global currency (e.g., GHS)
-      amount: exactAmount, // Pass the double amount to Paystack
-      callbackUrl: "https://example.com/callback", // Dummy callback URL
-      transactionCompleted: () {
-        if (!mounted) return;
-
-        // Payment was successful, navigate to success page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => SuccessAnimation(
-              onComplete: () {
-                // Navigate to homepage after success
-                Navigator.pushNamedAndRemoveUntil(
-                  context, 'HomePage', (route) => false);
-              },
+            onPressed: () {
+              if (mounted) {
+                handlePaystackPayment(total);  // Initiate the payment process
+              }
+            },
+            child: Text(
+              "Submit Order ($currencySign${total.toStringAsFixed(2)})",
+              style: const TextStyle(
+              fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.white,
+              ),
             ),
           ),
-        );
-      },
-      transactionNotCompleted: () {
-        if (!mounted) return;
-
-        // Payment failed, navigate to failure page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const PaymentFailedPage()),
-        );
-      },
-    );
-  } catch (e) {
-    if (kDebugMode) {
-      print('Error processing payment: $e');
-    }
-
-    // Ensure the widget is still mounted before showing the error
-    if (!mounted) return;
-
-    // Handle error by showing a Snackbar or dialog
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Error processing payment. Please try again.')),
-    );
-  }
-},
-
-// For displaying the amount in the UI
-child: Text(
-  "Submit Order ($currencySign${total.toStringAsFixed(2)})", // This is just for display purposes
-  style: const TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 18,
-    color: Colors.white,
-  ),
-),
-
-          ),
-
-
-
-
-
-
-
-
         ],
       ),
     );
   }
 
-  // Build Summary Row Widget for Checkout Box
   Widget buildSummaryRow(String label, double amount, {bool isTotal = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -420,3 +270,11 @@ child: Text(
     );
   }
 }
+
+
+
+
+
+
+
+

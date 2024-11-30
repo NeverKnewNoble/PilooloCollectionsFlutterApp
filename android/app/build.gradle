@@ -47,3 +47,40 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
 }
 
+// ****************************
+android {
+    namespace "com.pichillilorenzo.flutter_inappwebview"
+    namespace 'com.example.piloolo'  // Replace with your package name
+    compileSdkVersion 34
+
+    defaultConfig {
+        targetSdkVersion 34
+        applicationId "com.example.piloolo"  // Replace with your app's package name
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+    }
+
+    
+    buildTypes {
+        release {
+            // Enable code shrinking, obfuscation, and optimization for release builds
+            minifyEnabled true
+            // Enable resource shrinking, which is dependent on code shrinking
+            shrinkResources true
+            // Use ProGuard to optimize and shrink the code
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            // Keep minifyEnabled and shrinkResources disabled for debug builds
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
